@@ -3,9 +3,6 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-import sys
-
-
 # Quelle:
 # https://www.geeksforgeeks.org/tic-tac-toe-game-using-pyqt5-in-python/
 
@@ -181,27 +178,11 @@ class Window(QMainWindow):
                     and self.push_list[i][0].text() != "":
                 return True
 
-        # checking if diagonal crossed
-        if self.push_list[0][0].text() == self.push_list[1][1].text() \
-                and self.push_list[0][0].text() == self.push_list[2][2].text() \
-                and self.push_list[0][0].text() != "":
+        if all(x.text() == self.push_list[0][0].text() for x in [self.push_list[i][i] for i in range(3)]) and self.push_list[0][0].text() != "":
             return True
 
-        # if other diagonal is crossed
-        if self.push_list[0][2].text() == self.push_list[1][1].text() \
-                and self.push_list[1][1].text() == self.push_list[2][0].text() \
-                and self.push_list[0][2].text() != "":
+        if all(x.text() == self.push_list[0][2].text() for x in [self.push_list[2-i][i] for i in range(2,-1,-1)]) and self.push_list[0][2].text() != "":
             return True
 
         # if nothing is crossed
         return False
-
-
-# create pyqt5 app
-App = QApplication(sys.argv)
-
-# create the instance of our Window
-window = Window()
-
-# start the app
-sys.exit(App.exec())
