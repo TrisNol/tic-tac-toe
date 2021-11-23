@@ -3,15 +3,12 @@ from Logic.IController import IController
 
 
 class GameMaster(IController):
-    current_player = 0
-    times = 0
-    size = 0
-
-    labels = []
-    board = []
 
     def __init__(self, board_size: int = 3):
         self.build_board(board_size)
+        self.current_player = 0
+        self.times = 0
+        self.labels = []
 
     def build_board(self, n: int) -> list:
         if n < 3:
@@ -25,7 +22,7 @@ class GameMaster(IController):
             raise IndexError('Row or column Index out of range')
         self.board[row][column] = label
         self.times += 1
-        
+
     def next_player(self):
         self.current_player = int(not(self.current_player))
 
