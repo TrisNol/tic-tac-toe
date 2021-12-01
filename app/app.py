@@ -8,6 +8,8 @@ from datetime import datetime
 from Logic import GameMaster
 from Model.Game import Game
 from Model.GameTurn import GameTurn
+from utils.Writer import writer
+from utils.Reader import reader
 
 # create a Window class
 
@@ -24,7 +26,7 @@ class Window(QMainWindow):
         self.start = False
 
         self.game = Game()
-        self.turn_number = 1
+        self.turn_number = 0
 
         # setting title
         self.setWindowTitle("Python ")
@@ -201,6 +203,7 @@ class Window(QMainWindow):
 # Methoden für GUI
 # ----------------
 
+
     def textchangedPlayer1(self, s):
         self.player1 = s
 
@@ -236,15 +239,13 @@ class Window(QMainWindow):
         self.game.sign_player2 = self.selectsign2.currentText()
         now = datetime.now()
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
+        self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
 
     def write_game_stats(self, row, column, won=False):
         player_id = self.master.current_player
-        turn_number = self.turn_number = + 1
-        won
-        game_turn = GameTurn(player_id, row, column, turn_number, won)
+        game_turn = GameTurn(player_id, row, column, self.turn_number, won)
         self.game.turns.append(game_turn)
-
-        print(self.game.turns)
+        self.turn_number += 1
 
     def exit_game_action(self):
         print('Test')
@@ -305,6 +306,7 @@ class Window(QMainWindow):
         # call the winner checker method
         # win = self.who_wins()
         win = self.master.is_won()
+        draw = self.master.is_draw()
 
         # text
         text = ""
@@ -327,10 +329,16 @@ class Window(QMainWindow):
 
         # if winner is not decided
         # and total times is 9
-        elif self.master.is_draw():
+        elif draw:
             text = "Unentschieden"
 
         self.write_game_stats(row, column, win)
+
+        if win or draw:
+            now = datetime.now()
+            self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
+            writer(self.game)
+            reader()
 
         # setting text to the label
         self.label.setText(text)

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass()
-class GameTurn:
+class GameTurn(object):
     """ Class to store data related to a turn. """
     player_id: int
     row: int

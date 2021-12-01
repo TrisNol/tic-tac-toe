@@ -1,11 +1,10 @@
-from typing import List, TypeVar
+from typing import List
 from dataclasses import dataclass
 
 from Model.GameTurn import GameTurn
 
-T = TypeVar('T')
 @dataclass()
-class Game:
+class Game(object):
     """ Class to store data related to a game. """
     id: int
     name_player1: str
