@@ -10,6 +10,7 @@ from Model.Game import Game
 from Model.GameTurn import GameTurn
 from utils.Writer import writer
 from utils.Reader import reader
+from utils.DB import DB
 
 # create a Window class
 
@@ -25,8 +26,10 @@ class Window(QMainWindow):
         self.master = GameMaster(n)
         self.start = False
 
-        self.game = Game()
-        self.turn_number = 0
+        self.initialize_record_parameter()
+
+        # DB instance
+        self.db = DB()
 
         # setting title
         self.setWindowTitle("Python ")
@@ -203,7 +206,6 @@ class Window(QMainWindow):
 # Methoden für GUI
 # ----------------
 
-
     def textchangedPlayer1(self, s):
         self.player1 = s
 
@@ -232,20 +234,23 @@ class Window(QMainWindow):
         self.initialize_game_class()
 
     def initialize_game_class(self):
-        self.game.id = 1
+        self.game.id = self.db.get_amount_off_documents()
         self.game.name_player1 = self.playername1.text()
         self.game.sign_player1 = self.selectsign1.currentText()
         self.game.name_player2 = self.playername2.text()
         self.game.sign_player2 = self.selectsign2.currentText()
         now = datetime.now()
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
-        self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
 
     def write_game_stats(self, row, column, won=False):
         player_id = self.master.current_player
         game_turn = GameTurn(player_id, row, column, self.turn_number, won)
-        self.game.turns.append(game_turn)
+        self.game.turns.append(game_turn.__dict__)
         self.turn_number += 1
+
+    def initialize_record_parameter(self) -> None:
+        self.game = Game()
+        self.turn_number = 0
 
     def exit_game_action(self):
         print('Test')
@@ -271,6 +276,8 @@ class Window(QMainWindow):
                 # removing text of all the buttons
                 button.setText("")
         self.master = GameMaster(self.master.size)
+
+        self.initialize_record_parameter()
 
     # action called by the push buttons
     def action_called(self, row, column):
@@ -337,8 +344,7 @@ class Window(QMainWindow):
         if win or draw:
             now = datetime.now()
             self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
-            writer(self.game)
-            reader()
+            self.db.write_record(self.game)
 
         # setting text to the label
         self.label.setText(text)
