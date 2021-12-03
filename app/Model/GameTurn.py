@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 @dataclass()
 class GameTurn(object):
@@ -6,5 +7,6 @@ class GameTurn(object):
     player_id: int
     row: int
     column: int
+    state: List[List[int]]
     turn_number: int
     latest_turn: bool

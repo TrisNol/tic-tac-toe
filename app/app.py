@@ -4,12 +4,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 from datetime import datetime
+from copy import deepcopy
 
 from Logic import GameMaster
 from Model.Game import Game
 from Model.GameTurn import GameTurn
-from utils.Writer import writer
-from utils.Reader import reader
 from utils.DB import DB
 
 # create a Window class
@@ -243,8 +242,9 @@ class Window(QMainWindow):
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
 
     def write_game_stats(self, row, column, won=False):
+        # temp = self.master
         player_id = self.master.current_player
-        game_turn = GameTurn(player_id, row, column, self.turn_number, won)
+        game_turn = GameTurn(player_id, row, column, deepcopy(self.master.board), self.turn_number, won)
         self.game.turns.append(game_turn.__dict__)
         self.turn_number += 1
 
