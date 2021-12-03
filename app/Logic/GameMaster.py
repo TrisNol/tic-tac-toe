@@ -50,21 +50,21 @@ class GameMaster(IController):
         return False
 
 
-if __name__ == "__main__":
-    temp = GameMaster()
-    temp.build_board(4)
+# if __name__ == "__main__":
+#     temp = GameMaster()
+#     temp.build_board(4)
 
-    # temp.board= [['X','X','X'], [], []]
-    temp.set_field(0, 0, 'X')
-    print(temp.current_player)
-    temp.set_field(1, 0, 'X')
-    print(temp.current_player)
-    temp.set_field(2, 0, 'X')
-    print(temp.current_player)
-    temp.set_field(3, 0, 'X')
-    print(temp.current_player)
-    print(temp.board)
-    print(f"hat gewonnen? {temp.is_won()}")
+#     # temp.board= [['X','X','X'], [], []]
+#     temp.set_field(0, 0, 'X')
+#     print(temp.current_player)
+#     temp.set_field(1, 0, 'X')
+#     print(temp.current_player)
+#     temp.set_field(2, 0, 'X')
+#     print(temp.current_player)
+#     temp.set_field(3, 0, 'X')
+#     print(temp.current_player)
+#     print(temp.board)
+#     print(f"hat gewonnen? {temp.is_won()}")
 
-    temp.times = 16
-    print(temp.is_draw())
+#     temp.times = 16
+#     print(temp.is_draw())

@@ -46,3 +46,6 @@ coverage.xml
 # Django stuff:
 *.log
 *.pot
+
+# Virtualenv
+env/
