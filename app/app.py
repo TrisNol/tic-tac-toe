@@ -240,6 +240,7 @@ class Window(QMainWindow):
         self.game.sign_player2 = self.selectsign2.currentText()
         now = datetime.now()
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
+        self.game.field_size = self.master.size
 
     def write_game_stats(self, row, column, won=False):
         # temp = self.master

@@ -13,6 +13,7 @@ class Game(object):
     sign_player2: str
     start_time: str
     end_time: str
+    field_size: int
     turns: List[GameTurn]
 
     def __init__(self) -> None:
