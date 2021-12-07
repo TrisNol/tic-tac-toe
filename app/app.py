@@ -10,6 +10,7 @@ from Logic import GameMaster
 from Model.Game import Game
 from Model.GameTurn import GameTurn
 from utils.DB import DB
+from windows import Leaderboard
 
 # create a Window class
 
@@ -130,6 +131,13 @@ class Window(QMainWindow):
         reset_game.clicked.connect(self.reset_game_action)
 
         # --------------------------------------
+        # Leaderboard
+        leaderboard = QPushButton("Leaderboard", self)
+        leaderboard.setGeometry(50, self.master.size*100+350, 200, 50)
+        leaderboard.setStyleSheet('background-color: yellow')
+
+        # adding action action to the 
+        leaderboard.clicked.connect(self.show_leaderboard)
         # ComboBox Item für Auswahl des Zeichens
         # --------------------------------------
         self.labelPlayer1 = QLabel(self)
@@ -231,6 +239,12 @@ class Window(QMainWindow):
         # Highlighte Spieler 1 bei Spielstart
         self.labelPlayer1.setStyleSheet('background: lightgreen')
         self.initialize_game_class()
+
+    def show_leaderboard(self):
+        print('Start showing Leaderboard')
+        self.w = Leaderboard()
+        self.w.show()
+        self.hide()
 
     def initialize_game_class(self):
         self.game.id = self.db.get_amount_off_documents()
