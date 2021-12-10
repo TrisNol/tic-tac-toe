@@ -7,37 +7,31 @@ from random import randint
 
 from Logic import GameMaster
 from Visual import MainWindow
+from Model import Game
 
 class GameWindow(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
     """
-    def __init__(self,x,SignP1,SignP2,Name1,Name2,parent,KI):
+    def __init__(self,game,parent,KI):
         super().__init__()
 
-        print('Debug Uebergabe:',x,SignP1,SignP2,Name1,Name2)
+        #print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
         self.parent=parent
-        self.name1=Name1
-        self.name2=Name2
-        self.signP1=SignP1 #setze Zeichen für Spieler 1
-        self.signP2=SignP2 #setze Zeichen für Spieler 2
+        self.game=game        
         self.KIenabled=KI
+        print(self.game.name_player2)
         #--------------------------------------------
-        #Überprüfe, ob Spielfeldgröße übergeben wurde
-        if x==():
-            n=3
-        else:
-            n=x
-        #---------------------
+
         #Erstelle Spielfeld
-        self.master = GameMaster(n)
+        self.master = GameMaster(self.game.size)
         layout = QVBoxLayout()
         self.setLayout(layout)
         self.setWindowTitle('Game Window')
         self.setStyleSheet("background-color: grey;")
          # setting geometry
-        self.setGeometry(700, 100, n*100, (n+1)*120)  #(X,Y,Breite,Höhe)
+        self.setGeometry(700, 100, self.game.size*100, (self.game.size+1)*120)  #(X,Y,Breite,Höhe)
 
         #Methode für UI Komponenten von GameWindow
         self.UiComponents()
@@ -125,12 +119,12 @@ class GameWindow(QWidget):
         # checking the turn
         if self.master.current_player == 0:
             button.setStyleSheet('background: lightblue')   #hellblaues Feld für Spieler 1
-            button.setText(self.signP1)                     #setze Spielzeichen Spieler 1
-            self.master.set_field(row, column, self.signP1)
+            button.setText(self.game.sign_player1)                     #setze Spielzeichen Spieler 1
+            self.master.set_field(row, column, self.game.sign_player1)
         else:
             button.setStyleSheet('background: yellow')      #gelbes Feld für Spieler 2
-            button.setText(self.signP2)                     #setze Spielzeichen Spieler 2
-            self.master.set_field(row, column, self.signP2)
+            button.setText(self.game.sign_player2)                     #setze Spielzeichen Spieler 2
+            self.master.set_field(row, column, self.game.sign_player2)
 
         # call the winner checker method
         win = self.master.is_won()
@@ -143,10 +137,10 @@ class GameWindow(QWidget):
             # if current chance is 0
             if self.master.current_player == 1:
                 # Spieler 2 hat gewonnen
-                text = "{} \n hat gewonnen".format(self.name2)
+                text = "{} \n hat gewonnen".format(self.game.name_player2)
             # Spieler 1 hat gewonnen
             else:
-                text = "{} \n hat gewonnen".format(self.name1)
+                text = "{} \n hat gewonnen".format(self.game.name_player1)
 
             # disabling all the buttons
             for buttons in self.push_list:
