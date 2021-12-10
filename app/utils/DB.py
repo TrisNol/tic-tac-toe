@@ -11,3 +11,6 @@ class DB:
 
     def get_amount_off_documents(self) -> int:
         return self.records_collection.count_documents({})
+
+    def close(self) -> None:
+        self.client.close()

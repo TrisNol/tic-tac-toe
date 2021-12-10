@@ -8,6 +8,8 @@ from random import randint
 from Logic import GameMaster
 from Visual import Gamewindow
 from Model.Game import Game
+from utils.DB import DB
+from datetime import datetime
 
 #----------------------
 # create a Window class
@@ -17,12 +19,12 @@ class Window(QMainWindow):
     # constructor
     def __init__(self):
         super().__init__()
- 
+        #self.DB=DB()
         self.game=Game() #erstelle Objekt game aus Klasse Game: Spielername, Feldgröße, Zeichen
         self.start=False
         self.gameWindow=None #Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
         self.KIenabled=False #Computer KI ausgeschaltet
-
+       #self.initialize_game_class()
 
         #Set background color
         self.setStyleSheet("background-color: grey;")
@@ -231,6 +233,7 @@ class Window(QMainWindow):
 
     def show_game_window(self):    #Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
         print('Debug Game Window')
+        self.initialize_game_class()
         if self.gameWindow is None:
             print(self.game)
             self.gameWindow = Gamewindow.GameWindow(self.game,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
@@ -290,3 +293,9 @@ class Window(QMainWindow):
     def exit_game_action(self):             #Betätigung des roten 'Exit'-Buttons
         print('Test')
         sys.exit() #Beende Applikation
+
+    def initialize_game_class(self):
+        self.DB=DB()
+        self.game.id = self.DB.get_amount_off_documents()
+        now = datetime.now()
+        self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")

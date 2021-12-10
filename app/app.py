@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 import sys
 from Visual import MainWindow
 
+
 # create pyqt5 app
 App = QApplication(sys.argv)
 

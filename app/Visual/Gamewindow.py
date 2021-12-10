@@ -8,6 +8,8 @@ from random import randint
 from Logic import GameMaster
 from Visual import MainWindow
 from Model import Game
+from datetime import datetime
+from utils.DB import DB
 
 class GameWindow(QWidget):
     """
@@ -16,6 +18,7 @@ class GameWindow(QWidget):
     """
     def __init__(self,game,parent,KI):
         super().__init__()
+        self.DB=DB()
 
         #print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
         self.parent=parent
@@ -134,6 +137,7 @@ class GameWindow(QWidget):
 
         # if winner is decided
         if win == True:
+            self.save_game()
             # if current chance is 0
             if self.master.current_player == 1:
                 # Spieler 2 hat gewonnen
@@ -150,7 +154,9 @@ class GameWindow(QWidget):
         # if winner is not decided
         # and total times is 9
         elif self.master.is_draw():
+            self.save_game()
             text = "Unentschieden"
+
 
         self.master.next_player()
         # setting text to the label
@@ -168,3 +174,10 @@ class GameWindow(QWidget):
             self.master.current_player=0
             print('Spieler: ',self.master.current_player)
         #---------------------------------------------------
+
+    def save_game(self):
+        print(self.game.id)
+        now = datetime.now()
+        self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
+        self.DB.write_record(self.game)
+        self.DB.close()
