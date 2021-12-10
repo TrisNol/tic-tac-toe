@@ -358,6 +358,7 @@ class Window(QMainWindow):
         if win or draw:
             now = datetime.now()
             self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
+            self.game.winner = self.master.current_player
             self.db.write_record(self.game)
 
         # setting text to the label

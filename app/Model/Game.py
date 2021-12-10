@@ -14,6 +14,7 @@ class Game(object):
     start_time: str
     end_time: str
     turns: List[GameTurn]
+    winner: str
 
     def __init__(self) -> None:
         self.turns = []
