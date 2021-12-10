@@ -1,5 +1,5 @@
-
 from Logic.IController import IController
+from random import randint
 
 
 class GameMaster(IController):
@@ -31,6 +31,7 @@ class GameMaster(IController):
 
     def is_won(self) -> bool:
         # checking if any row crossed
+
         for i in range(self.size):
             if all(x == self.board[i][0] for x in [self.board[i][j] for j in range(self.size)]) and self.board[i][0] != "":
                 return True
@@ -48,6 +49,34 @@ class GameMaster(IController):
 
         # if nothing is crossed
         return False
+
+    #--------------------------------------
+    #KI Methode für das Setzen eines Feldes
+    #--------------------------------------
+    def KI_set(self):
+        print('Debug KI_set')
+        boardlist=[]
+        #Generiere einen row/column Eintrag und überprüfe ob frei
+        for x in range(100):       #Angabe Iterationen zum Finden eines freien Feldes
+            row=randint(0,len(self.board)-1)
+            column=randint(0,len(self.board)-1)
+            fieldstatus=self.board[row][column]
+            if fieldstatus=='': #leeres Feld gefunden
+                print('Freies Feld bei: ', row, column )
+                print('benoetigte Iterationen: ', x)
+                break
+
+        #Erstelle eine eindimensionale Liste aus der Boardliste
+        for element in self.board:
+            if type(element) is list:
+                for item in element:
+                    boardlist.append(item)
+            else:
+                boardlist.append(element)
+        #-------------------------------------                
+        #print('boardlist: ', boardlist)
+        #print(row, column)
+        return row, column
 
 
 # if __name__ == "__main__":
