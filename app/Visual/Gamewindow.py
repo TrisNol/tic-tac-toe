@@ -8,8 +8,11 @@ from random import randint
 from Logic import GameMaster
 from Visual import MainWindow
 from Model import Game
+from Model.GameTurn import GameTurn
 from datetime import datetime
 from utils.DB import DB
+
+import copy
 
 class GameWindow(QWidget):
     """
@@ -29,6 +32,7 @@ class GameWindow(QWidget):
 
         #Erstelle Spielfeld
         self.master = GameMaster(self.game.size)
+        self.turn_number = 0
         layout = QVBoxLayout()
         self.setLayout(layout)
         self.setWindowTitle('Game Window')
@@ -102,6 +106,13 @@ class GameWindow(QWidget):
         # adding action action to the reset push button
         end_game.clicked.connect(self.end_game_action)
         #------------------------------------------------------
+    def write_game_stats(self, row, column, won=False):
+        player_id = self.master.current_player
+        state = copy.deepcopy(self.master.board)
+        game_turn = GameTurn(player_id, row, column,state, self.turn_number, won)
+        self.game.turns.append(game_turn.__dict__)
+        self.turn_number += 1
+
 
     def end_game_action(self):              #Drücke Beenden Button im GameWindow / Reset bzw. Freigabe im Hauptfenster
         print('Debug Beende GameWindow')    #Debug Ausgabe
@@ -134,6 +145,8 @@ class GameWindow(QWidget):
 
         # text
         text = ""
+
+        self.write_game_stats(row, column, win)
 
         # if winner is decided
         if win == True:
