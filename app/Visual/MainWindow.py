@@ -7,6 +7,9 @@ from random import randint
 
 from Logic import GameMaster
 from Visual import Gamewindow
+from Model.Game import Game
+from utils.DB import DB
+from datetime import datetime
 
 #----------------------
 # create a Window class
@@ -16,13 +19,12 @@ class Window(QMainWindow):
     # constructor
     def __init__(self):
         super().__init__()
- 
+        #self.DB=DB()
+        self.game=Game() #erstelle Objekt game aus Klasse Game: Spielername, Feldgröße, Zeichen
         self.start=False
-        self.sign1=''
-        self.sign2=''
-        self.Modus=0
         self.gameWindow=None #Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
         self.KIenabled=False #Computer KI ausgeschaltet
+       #self.initialize_game_class()
 
         #Set background color
         self.setStyleSheet("background-color: grey;")
@@ -99,7 +101,7 @@ class Window(QMainWindow):
         self.playername1.setFont(QFont('Arial',12))
         self.playername1.setStyleSheet('background: lightblue')
 
-        self.player1='Spieler 1'
+        self.game.name_player1='Spieler 1'
         self.selectsign1=QComboBox(self) #erstelle DropDown Objekt Zeichen Spieler 1
         self.selectsign1.setFont(QFont('Arial',20))
         self.selectsign1.setStyleSheet('background: lightgrey')
@@ -134,7 +136,7 @@ class Window(QMainWindow):
         self.playername2.setFont(QFont('Arial',12))
         self.playername2.setStyleSheet('background: yellow')
 
-        self.player2='Spieler 2'
+        self.game.name_player2='Spieler 2'
         self.selectsign2=QComboBox(self) #erstelle DropDown Objekt Zeichen Spieler 2
         self.selectsign2.setFont(QFont('Arial',20))
         self.selectsign2.setStyleSheet('background: lightgrey')
@@ -167,6 +169,7 @@ class Window(QMainWindow):
         #Aufruf Methode bei Zeichenwechsel
         #---------------------------------
         self.selectsign1.activated[str].connect(self.sign_changed1)
+        #self.selectsign1.activated[str].connect(self.game.sign_player1=)
         self.selectsign2.activated[str].connect(self.sign_changed2)
         self.playername1.textChanged.connect(self.textchangedPlayer1)
         self.playername2.textChanged.connect(self.textchangedPlayer2)
@@ -185,7 +188,7 @@ class Window(QMainWindow):
             self.selectsign2.setEnabled(False)
             self.selectsign2.addItem('©') #Sonderzeichen für KI Gegner
             self.selectsign2.setCurrentText('©')
-            self.sign2='©'
+            self.game.sign_player2='©'
             self.KIenabled=True
             print('Debug 1vsKI', self.KIenabled)
         else:
@@ -196,7 +199,7 @@ class Window(QMainWindow):
             self.selectsign2.setCurrentIndex(0)
             self.playername2.setText('Player 2')
             self.playername2.setEnabled(True)
-            self.sign2=""
+            self.game.sign_player2=""
             self.KIenabled=False
 
 
@@ -205,17 +208,18 @@ class Window(QMainWindow):
     def GameMode_changed(self,s):           #Auswahl der Spielfeldgröße 3x3, 4x4, 5x5
         print('GameMode changed to: ',s )
         if s =='3x3':
-            self.Modus=3
+            self.game.size=3
         elif s == '4x4':
-            self.Modus=4
+            self.game.size=4
         elif s == '5x5':
-            self.Modus=5
+            self.game.size=5
         else:
-            self.Modus=0       
+            self.game.size=0       
 
     def close_game(self):                   #Methode welche das Gamewindow bei Verlassen ausführt, um die Eingabefelder freizugeben
         self.gameWindow=None #lösche Objekt gameWindow, um es bei erneutem Start neu zu erstellen
          # resetting values
+        self.game = Game()
         self.selectsign1.setEnabled(True)
         self.selectsign2.setEnabled(True)
         self.playername1.setEnabled(True)
@@ -230,23 +234,26 @@ class Window(QMainWindow):
 
     def show_game_window(self):    #Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
         print('Debug Game Window')
+        self.initialize_game_class()
         if self.gameWindow is None:
-            self.gameWindow = Gamewindow.GameWindow(self.Modus,self.sign1,self.sign2,self.player1,self.player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+            print(self.game)
+            self.gameWindow = Gamewindow.GameWindow(self.game,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+            #self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.gameWindow.show()
     
     def textchangedPlayer1(self,s):         #setze Spielernamen 1 bei Änderung
-        self.player1=s
+        self.game.name_player1=s
         
     def textchangedPlayer2(self,s):         #setze Spielernamen 2 bei Änderung
-        self.player2=s  
+        self.game.name_player2=s  
     
     def sign_changed1(self,s):              #setze Spielerzeichen 1 bei Änderung
-        self.sign1=s
+        self.game.sign_player1=s
         zeichenTemp=self.zeichensatz            
         print('Auswahl geaendert Spieler 1!',s)
         
     def sign_changed2(self,s):              #setze Spielerzeichen 2 bei Änderung
-        self.sign2=s
+        self.game.sign_player2=s
         zeichenTemp=self.zeichensatz            
         print('Auswahl geaendert Spieler 2!',s)    
                  
@@ -255,17 +262,17 @@ class Window(QMainWindow):
         #---------------------------------
         #Plausibiltät-Check vor Spielstart --> sind alle erforderlichen Einstellungen gewählt
         #--------------------------------
-        if self.sign1 =='':
+        if self.game.sign_player1 =='':
             self.label.setFont(QFont('Arial',10))
             self.label.setStyleSheet('background: red')
             self.label.setText('Fehler Spieler 1: kein Zeichen ausgewählt')
             return
-        elif self.sign2 =='':
+        elif self.game.sign_player2 =='':
             self.label.setStyleSheet('background: red')
             self.label.setFont(QFont('Arial',10))
             self.label.setText('Fehler Spieler 2: kein Zeichen ausgewählt')
             return
-        elif self.Modus==0:
+        elif self.game.size==0:
             self.label.setStyleSheet('background: red')
             self.label.setFont(QFont('Arial',10))
             self.label.setText('Fehler Modus: kein Spielmodus ausgewählt')
@@ -287,3 +294,9 @@ class Window(QMainWindow):
     def exit_game_action(self):             #Betätigung des roten 'Exit'-Buttons
         print('Test')
         sys.exit() #Beende Applikation
+
+    def initialize_game_class(self):
+        self.DB=DB()
+        self.game.id = self.DB.get_amount_off_documents()
+        now = datetime.now()
+        self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
