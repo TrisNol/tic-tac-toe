@@ -26,5 +26,6 @@ class Game(object):
         self.sign_player2 =''
         self.start_time  =''
         self.end_time =''
+        self.winner = ''
     
         self.size = 0
