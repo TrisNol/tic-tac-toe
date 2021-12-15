@@ -3,7 +3,7 @@ from random import randint
 
 class Random(AI):
 
-    def recommendMove(field: list, player: int) -> tuple:
+    def recommendMove(self, field: list, player: int) -> tuple:
         # boardlist=[]
         # Generate random row and column indexes and check if the cell is free
         row = -1

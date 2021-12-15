@@ -31,7 +31,7 @@ class Analysis():
         return {
             'player_one_won': len(player_one_wins),
             'player_two_won': len(player_two_wins),
-            'draws': len(draws)
+            'draw': len(draws)
         }
 
     def draw_win_pie(self, data):
