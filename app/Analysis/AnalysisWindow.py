@@ -17,6 +17,7 @@ class AnalysisWindow(QWidget):
 
     def build_layout(self):
         self.setFixedSize(640, 480)
+        self.setWindowTitle("Analysis")
         layout = QVBoxLayout()
 
         frame = self.analysis.get_frame()

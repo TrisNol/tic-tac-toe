@@ -72,10 +72,6 @@ class Statistic(AI):
         groups['current'] = groups['current'].apply(self.decode_field_to_list)
         groups['next'] = groups['next'].apply(self.decode_field_to_list)
 
-        print(groups.current[0])
-        print('------------------')
-        print(groups.next[0])
-
         currentState = groups.current[0]
         nextState = groups.next[0]
 
