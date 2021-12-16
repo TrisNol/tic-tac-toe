@@ -14,6 +14,7 @@ class Game(object):
     start_time: str 
     end_time: str 
     turns: List[GameTurn]
+    winner: str
     size: int 
 
     def __init__(self) -> None:
@@ -25,5 +26,6 @@ class Game(object):
         self.sign_player2 =''
         self.start_time  =''
         self.end_time =''
+        self.winner = ''
     
         self.size = 0
