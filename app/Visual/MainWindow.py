@@ -6,10 +6,11 @@ import sys
 from random import randint
 
 from Logic import GameMaster
-from Visual import Gamewindow
+from Visual import Gamewindow, Leaderboard
 from Model.Game import Game
 from utils.DB import DB
 from datetime import datetime
+
 
 #----------------------
 # create a Window class
@@ -25,7 +26,7 @@ class Window(QMainWindow):
         self.gameWindow=None #Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
         self.KIenabled=False #Computer KI ausgeschaltet
        #self.initialize_game_class()
-
+        self.leaderboard = None
         #Set background color
         self.setStyleSheet("background-color: grey;")
 
@@ -82,6 +83,11 @@ class Window(QMainWindow):
         self.start_game.setStyleSheet('background-color: green')
         # adding action action to the reset push button
         self.start_game.clicked.connect(self.start_game_action)
+
+        self.open_leaderboard = QPushButton("Leaderboard", self)
+        self.open_leaderboard.setGeometry(50, 650, 200, 50) #(X, Y, Breite, Höhe)
+        self.open_leaderboard.setStyleSheet('background-color: yellow')
+        self.open_leaderboard.clicked.connect(self.show_leaderboard)
 
         #--------------------------------------
         #ComboBox Item für Auswahl des Zeichens
@@ -240,6 +246,15 @@ class Window(QMainWindow):
             self.gameWindow = Gamewindow.GameWindow(self.game,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
             #self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.gameWindow.show()
+
+    def show_leaderboard(self):    #Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
+        print('Debug Leaderboard Window')
+        # self.initialize_game_class()
+        if self.leaderboard is None:
+            # print(self.game)
+            self.leaderboard = Leaderboard.Leaderboard() #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+            #self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+        self.leaderboard.show()
     
     def textchangedPlayer1(self,s):         #setze Spielernamen 1 bei Änderung
         self.game.name_player1=s
