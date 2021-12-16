@@ -38,7 +38,7 @@ class Window(QMainWindow):
 
         # setting geometry
         self.setGeometry(100, 100,
-                         300, 700)  # (X,Y,Breite,Höhe)
+                         300, 800)  # (X,Y,Breite,Höhe)
 
         # calling method
         self.UiComponents()
@@ -72,7 +72,7 @@ class Window(QMainWindow):
         # ------------------------------------
         exit_game = QPushButton("Exit", self)
         # setting geometry
-        exit_game.setGeometry(50, 900, 200, 50)  # (X, Y, Breite, Höhe)
+        exit_game.setGeometry(50, 600, 200, 50)  # (X, Y, Breite, Höhe)
         exit_game.setStyleSheet('background-color: red')
         # adding action action to the reset push button
         exit_game.clicked.connect(self.exit_game_action)
