@@ -22,3 +22,6 @@ class DB:
         return self.records_collection.find(query)
     def close(self) -> None:
         self.client.close()
+
+    def __del__(self):
+        self.close()
