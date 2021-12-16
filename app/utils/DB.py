@@ -19,3 +19,6 @@ class DB:
 
     def close(self) -> None:
         self.client.close()
+
+    def __del__(self):
+        self.close()
