@@ -243,12 +243,23 @@ class Window(QMainWindow):
         else:
             self.game.size = 0
 
-    # Methode welche das Gamewindow bei Verlassen ausführt, um die Eingabefelder freizugeben
-    def close_game(self):
-        # lösche Objekt gameWindow, um es bei erneutem Start neu zu erstellen
-        self.gameWindow = None
-        # resetting values
+    def close_game(self):                   #Methode welche das Gamewindow bei Verlassen ausführt, um die Eingabefelder freizugeben
+        self.gameWindow=None #lösche Objekt gameWindow, um es bei erneutem Start neu zu erstellen
+         # resetting values
+        sign1Temp=self.game.sign_player1
+        sign2Temp=self.game.sign_player2
+        name1Temp=self.game.name_player1
+        name2Temp=self.game.name_player2
+        sizeTemp=self.game.size
+        #---------------------
         self.game = Game()
+        #---------------------
+        self.game.sign_player1=sign1Temp
+        self.game.sign_player2=sign2Temp
+        self.game.name_player1=name1Temp
+        self.game.name_player2=name2Temp
+        self.game.size=sizeTemp
+        #-------------------        
         self.selectsign1.setEnabled(True)
         self.selectsign2.setEnabled(True)
         self.playername1.setEnabled(True)
