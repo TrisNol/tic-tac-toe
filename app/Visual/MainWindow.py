@@ -5,7 +5,6 @@ from PyQt5.QtCore import *
 import sys
 from random import randint
 
-from Logic import GameMaster
 from Visual import Gamewindow
 from Model.Game import Game
 from utils.DB import DB
@@ -28,7 +27,6 @@ class Window(QMainWindow):
 
         #Set background color
         self.setStyleSheet("background-color: grey;")
-
         # setting title
         self.setWindowTitle("TicTacToe")
 
