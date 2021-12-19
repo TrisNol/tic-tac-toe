@@ -1,11 +1,10 @@
 import sys
 sys.path.append("..")  #
 
-from AI import AI
+from AI.AI import AI
 from utils.DB import DB
 from Analysis.Analysis import Analysis
 import pandas as pd
-import copy
 
 
 class Statistic(AI):
@@ -18,16 +17,6 @@ class Statistic(AI):
 
     def decode_field_to_list(self, field: str):
         return [[z for z in y.split(" ")] for y in field.split('\n')]
-
-    def translate_player_symbols(self, field, symbol_one, symbol_two):
-        field = copy.deepcopy(field)
-        for i in range(len(field)):
-            for j in range(len(field[0])):
-                if field[i][j] == symbol_one:
-                    field[i][j] = 0
-                elif field[i][j] == symbol_two:
-                    field[i][j] = 1
-        return field
 
     def transform_turns(self, df):
         for index, row in df.iterrows():

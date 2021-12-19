@@ -10,6 +10,7 @@ from Visual import MainWindow
 from Model import Game
 from Model.GameTurn import GameTurn
 from datetime import datetime
+from AI.AI import AI
 from utils.DB import DB
 
 import copy
@@ -19,14 +20,18 @@ class GameWindow(QWidget):
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
     """
-    def __init__(self,game,parent,KI):
+    ai: AI = None
+
+    def __init__(self,game,parent,AI_enabled, ai):
         super().__init__()
         self.DB=DB()
 
         #print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
         self.parent=parent
         self.game=game        
-        self.KIenabled=KI
+        self.AI_enabled=AI_enabled
+        self.ai = ai
+        print('passed down AI: '+ str(self.ai))
         print(self.game.name_player2)
         #--------------------------------------------
 
@@ -178,12 +183,13 @@ class GameWindow(QWidget):
         #---------------------------------------------------
         #Überprüfe ob KI angewählt ist, um Zug durchzuführen
         #---------------------------------------------------
-        if self.KIenabled == True :
+        if self.AI_enabled == True :
             print('Debug KI enabled')
             if self.master.current_player == 1: 
                 print('Debug KI am Zug')
-                r,c= self.master.KI_set()
-                self.push_list[r][c].click()
+                board = self.ai.translate_player_symbols(self.master.board, self.game.sign_player1, self.game.sign_player2)
+                row, column = self.ai.recommendMove(board, 1)
+                self.push_list[row][column].click()
             self.master.current_player=0
             print('Spieler: ',self.master.current_player)
         #---------------------------------------------------

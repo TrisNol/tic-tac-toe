@@ -9,6 +9,8 @@ from Logic import GameMaster
 from Visual import Gamewindow, Leaderboard
 from Analysis.AnalysisWindow import AnalysisWindow
 from Model.Game import Game
+from AI.Random import Random
+from AI.Statistic import Statistic
 from utils.DB import DB
 from datetime import datetime
 
@@ -23,14 +25,14 @@ class Window(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        #self.DB=DB()
-        self.game=Game() #erstelle Objekt game aus Klasse Game: Spielername, Feldgröße, Zeichen
-        self.start=False
-        self.gameWindow=None #Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
-        self.KIenabled=False #Computer KI ausgeschaltet
-       #self.initialize_game_class()
+        # self.DB=DB()
+        self.game = Game()  # erstelle Objekt game aus Klasse Game: Spielername, Feldgröße, Zeichen
+        self.start = False
+        self.gameWindow = None  # Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
+        self.KIenabled = False  # Computer KI ausgeschaltet
+       # self.initialize_game_class()
         self.leaderboard = None
-        #Set background color
+        # Set background color
         self.setStyleSheet("background-color: grey;")
 
         # setting title
@@ -88,14 +90,15 @@ class Window(QMainWindow):
         self.start_game.clicked.connect(self.start_game_action)
 
         self.open_leaderboard = QPushButton("Leaderboard", self)
-        self.open_leaderboard.setGeometry(50, 650, 200, 50) #(X, Y, Breite, Höhe)
+        self.open_leaderboard.setGeometry(
+            50, 650, 200, 50)  # (X, Y, Breite, Höhe)
         self.open_leaderboard.setStyleSheet('background-color: yellow')
         self.open_leaderboard.clicked.connect(self.show_leaderboard)
 
-        #--------------------------------------
-        #ComboBox Item für Auswahl des Zeichens
-        #--------------------------------------
-        self.labelPlayer1=QLabel(self)
+        # --------------------------------------
+        # ComboBox Item für Auswahl des Zeichens
+        # --------------------------------------
+        self.labelPlayer1 = QLabel(self)
         # Button to open the Analysis/Repoting Window
         self.show_analysis = QPushButton("Analysis", self)
         self.show_analysis.setGeometry(
@@ -147,13 +150,18 @@ class Window(QMainWindow):
         # ------------------------------------------------
         # Toggle-Button für Spielmodus 1vs1 - 1vsKI
         # ------------------------------------------------
-        self.KIButton = QPushButton("", self)
-        # setting checkable to true
-        self.KIButton.setCheckable(True)
-        # setting default color of button to light-grey
-        self.KIButton.setFont(QFont('Arial', 18))
-        self.KIButton.setText('1 vs 1')
-        self.KIButton.setStyleSheet("background-color : lightgrey")
+        self.aiModes = {'1 vs 1': {"enabled": False, "ai": None},
+                        '1 vs Random': {"enabled": True, "ai": Random()},
+                        '1 vs Statistic': {"enabled": True, "ai": Statistic()}
+                        }
+        self.aiMode = QComboBox(self)
+        self.aiMode.setFont(QFont('Arial', 16))
+        self.aiMode.setStyleSheet('background: lightgrey')
+        self.aiMode.addItem('1 vs 1')
+        self.aiMode.addItem('1 vs Random')
+        self.aiMode.addItem('1 vs Statistic')
+        # self.aiMode.addItem('1 vs Heuristic')
+        # self.aiMode.addItem('1 vs MiniMax')
         # -------------------------------------------------
         self.playername2 = QLineEdit(self)  # erstelle Texteingabe Spieler 2
         # Defaultwert 'Spieler 2' für Name
@@ -190,7 +198,7 @@ class Window(QMainWindow):
 
         self.labelGameMode.setGeometry(100, 130, 100, 35)
         self.GameMode.setGeometry(100, 170, 100, 35)
-        self.KIButton.setGeometry(100, 210, 100, 35)
+        self.aiMode.setGeometry(100, 210, 100, 35)
 
         # ---------------------------------
         # Aufruf Methode bei Zeichenwechsel
@@ -201,13 +209,13 @@ class Window(QMainWindow):
         self.playername1.textChanged.connect(self.textchangedPlayer1)
         self.playername2.textChanged.connect(self.textchangedPlayer2)
         self.GameMode.activated[str].connect(self.GameMode_changed)
-        self.KIButton.clicked.connect(self.changeKI)
+        self.aiMode.activated[str].connect(self.ai_changed)
         # --------------------------------
 # ----------------
 # Methoden für GUI
 # ----------------
 
-    def changeKI(self):
+    def changeAI(self):
         if self.KIButton.isChecked():
             self.KIButton.setStyleSheet('background-color: lightblue')
             self.KIButton.setText('1 vs KI')
@@ -243,30 +251,33 @@ class Window(QMainWindow):
         else:
             self.game.size = 0
 
-    def close_game(self):                   #Methode welche das Gamewindow bei Verlassen ausführt, um die Eingabefelder freizugeben
-        self.gameWindow=None #lösche Objekt gameWindow, um es bei erneutem Start neu zu erstellen
-         # resetting values
-        sign1Temp=self.game.sign_player1
-        sign2Temp=self.game.sign_player2
-        name1Temp=self.game.name_player1
-        name2Temp=self.game.name_player2
-        sizeTemp=self.game.size
-        #---------------------
+    # Methode welche das Gamewindow bei Verlassen ausführt, um die Eingabefelder freizugeben
+    def close_game(self):
+        # lösche Objekt gameWindow, um es bei erneutem Start neu zu erstellen
+        self.gameWindow = None
+        # resetting values
+        sign1Temp = self.game.sign_player1
+        sign2Temp = self.game.sign_player2
+        name1Temp = self.game.name_player1
+        name2Temp = self.game.name_player2
+        sizeTemp = self.game.size
+        # ---------------------
         self.game = Game()
-        #---------------------
-        self.game.sign_player1=sign1Temp
-        self.game.sign_player2=sign2Temp
-        self.game.name_player1=name1Temp
-        self.game.name_player2=name2Temp
-        self.game.size=sizeTemp
-        #-------------------        
+        # ---------------------
+        self.game.sign_player1 = sign1Temp
+        self.game.sign_player2 = sign2Temp
+        self.game.name_player1 = name1Temp
+        self.game.name_player2 = name2Temp
+        self.game.size = sizeTemp
+        # -------------------
         self.selectsign1.setEnabled(True)
         self.selectsign2.setEnabled(True)
         self.playername1.setEnabled(True)
         self.selectsign2.setEnabled(True)
         self.playername2.setEnabled(True)
         self.GameMode.setEnabled(True)
-        self.KIButton.setEnabled(True)
+        # self.KIButton.setEnabled(True)
+        self.aiMode.setEnabled(True)
         self.start_game.setEnabled(True)
         self.labelPlayer1.setStyleSheet('background: grey')
         self.labelPlayer2.setStyleSheet('background: grey')
@@ -280,41 +291,47 @@ class Window(QMainWindow):
             print(self.game)
             # erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
             self.gameWindow = Gamewindow.GameWindow(
-                self.game, self, self.KIenabled)
+                self.game, self, self.ai['enabled'], self.ai['ai'])
             # self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.gameWindow.show()
 
-    def show_leaderboard(self):    #Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
+    # Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
+    def show_leaderboard(self):
         print('Debug Leaderboard Window')
         # self.initialize_game_class()
         if self.leaderboard is None:
             # print(self.game)
-            self.leaderboard = Leaderboard.Leaderboard() #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
-            #self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+            # erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
+            self.leaderboard = Leaderboard.Leaderboard()
+            # self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.leaderboard.show()
 
     def show_analysis_action(self):
         print('Debug Game Window')
         self.analysis_window = AnalysisWindow(self)
         self.analysis_window.show()
-    
-    def textchangedPlayer1(self,s):         #setze Spielernamen 1 bei Änderung
-        self.game.name_player1=s
-        
-    def textchangedPlayer2(self,s):         #setze Spielernamen 2 bei Änderung
-        self.game.name_player2=s  
-    
-    def sign_changed1(self,s):              #setze Spielerzeichen 1 bei Änderung
-        self.game.sign_player1=s
-        zeichenTemp=self.zeichensatz            
-        print('Auswahl geaendert Spieler 1!',s)
-        
-    def sign_changed2(self,s):              #setze Spielerzeichen 2 bei Änderung
-        self.game.sign_player2=s
-        zeichenTemp=self.zeichensatz            
-        print('Auswahl geaendert Spieler 2!',s)    
-                 
-    def start_game_action(self):            #Betätigung des grünen 'Start'-Buttons
+
+    def textchangedPlayer1(self, s):  # setze Spielernamen 1 bei Änderung
+        self.game.name_player1 = s
+
+    def textchangedPlayer2(self, s):  # setze Spielernamen 2 bei Änderung
+        self.game.name_player2 = s
+
+    def ai_changed(self, mode):
+        self.ai = self.aiModes[mode]
+        print(self.ai)
+
+    def sign_changed1(self, s):  # setze Spielerzeichen 1 bei Änderung
+        self.game.sign_player1 = s
+        zeichenTemp = self.zeichensatz
+        print('Auswahl geaendert Spieler 1!', s)
+
+    def sign_changed2(self, s):  # setze Spielerzeichen 2 bei Änderung
+        self.game.sign_player2 = s
+        zeichenTemp = self.zeichensatz
+        print('Auswahl geaendert Spieler 2!', s)
+
+    def start_game_action(self):  # Betätigung des grünen 'Start'-Buttons
         print('Debug Button Start')
         # ---------------------------------
         # Plausibiltät-Check vor Spielstart --> sind alle erforderlichen Einstellungen gewählt
@@ -340,7 +357,8 @@ class Window(QMainWindow):
         self.selectsign2.setEnabled(False)
         self.playername2.setEnabled(False)
         self.GameMode.setEnabled(False)
-        self.KIButton.setEnabled(False)
+        self.aiMode.setEnabled(False)
+        # self.KIButton.setEnabled(False)
         self.start_game.setEnabled(False)
         self.start = True
         self.label.setStyleSheet('background: white')
