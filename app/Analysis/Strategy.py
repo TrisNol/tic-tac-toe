@@ -14,12 +14,9 @@ class Strategy():
         self.opponent_sign = self.game.sign_player2
         self.own_sign = self.game.sign_player1
         self.recommendation = []
-        self.opponent = []
-        self.own = []
 
     def handler(self):
         self.reset()
-        print(self.board)
         if self.starter:
             self.starter = False
             self.first()
@@ -35,8 +32,7 @@ class Strategy():
             if res:
                 self.highlightButton(res[0], res[1])
                 return
-
-            self.collect()
+                
             self.analyze()
 
     def first(self):
@@ -52,14 +48,6 @@ class Strategy():
                                          "border-right-color :yellow;"
                                          "border-bottom-color : green")
 
-    def collect(self):
-        for i in range(0, len(self.board), 1):
-            for j in range(0, len(self.board), 1):
-                if self.board[i][j] == self.opponent_sign:
-                    self.opponent.append([i, j])
-                if self.board[i][j] == self.own_sign:
-                    self.own.append([i, j])
-
     def analyze(self):
         # Select corner
         for i in range(0, len(self.board), 2):
@@ -71,7 +59,7 @@ class Strategy():
         # Select Center if available
         if self.buttons[1][1].isEnabled():
             self.recommendation.append([1, 1])
-        
+
         if len(self.recommendation) < 2:
             self.recommendation = []
             res = self.can_win(self.opponent_sign, self.own_sign, 0)
@@ -184,31 +172,6 @@ class Strategy():
             caller_sign, opponent_sign, threshold)
         if res:
             return res
-
-    def selected_edge(self):
-        print(self.board)
-        if self.board[1][0] == self.opponent_sign:
-            return "10"
-        elif self.board[0][1] == self.opponent_sign:
-            return "10"
-        elif self.board[2][1] == self.opponent_sign:
-            return "21"
-        elif self.board[1][2] == self.opponent_sign:
-            return "12"
-        else:
-            return False
-
-    def selected_corner(self):
-        if self.board[0][0] == self.opponent_sign:
-            return "10"
-        elif self.board[0][2] == self.opponent_sign:
-            return "10"
-        elif self.board[2][0] == self.opponent_sign:
-            return "21"
-        elif self.board[2][2] == self.opponent_sign:
-            return "12"
-        else:
-            return False
 
     def reset(self):
         for i in range(0, len(self.buttons), 1):
