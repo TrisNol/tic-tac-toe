@@ -17,5 +17,11 @@ class DB:
     def get_amount_off_documents(self) -> int:
         return self.records_collection.count_documents({})
 
+    def get_player_stats(self) -> object:
+        query = {}
+        return self.records_collection.find(query)
     def close(self) -> None:
         self.client.close()
+
+    def __del__(self):
+        self.close()
