@@ -65,9 +65,6 @@ class Leaderboard(QTableWidget):
                 highscoreList[game["name_player2"]]["Looses"] += int(player1)
             else:    
                 highscoreList[game["name_player2"]] =  {"Wins": int(player2), "Draws": int(isDraw), "Looses": int(player1)}
-
-            
-            
         return highscoreList
 
      

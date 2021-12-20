@@ -30,6 +30,7 @@ class Window(QMainWindow):
         self.start = False
         self.gameWindow = None  # Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
         self.KIenabled = False  # Computer KI ausgeschaltet
+        self.ai = {'enabled': False, 'ai': None}
        # self.initialize_game_class()
         self.leaderboard = None
         # Set background color
@@ -298,6 +299,7 @@ class Window(QMainWindow):
     # Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
     def show_leaderboard(self):
         print('Debug Leaderboard Window')
+        self.leaderboard = Leaderboard.Leaderboard()
         # self.initialize_game_class()
         if self.leaderboard is None:
             # print(self.game)

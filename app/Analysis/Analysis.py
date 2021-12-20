@@ -69,8 +69,6 @@ class Analysis():
         plt.axis('equal')
         labels = [f'{key}: {value}' for key, value in data.items()]
         plt.legend(loc='best', labels=labels)
-        # plt.show()
-        # return plt.figure()
         return plt.gcf()
 
     def avg_game_len(self, df: DataFrame) -> timedelta:
