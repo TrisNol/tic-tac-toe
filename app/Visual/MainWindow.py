@@ -32,6 +32,8 @@ class Window(QMainWindow):
         self.leaderboard = None
         #Set background color
         self.setStyleSheet("background-color: grey;")
+        # Enable help
+        self.helper = None
         # setting title
         self.setWindowTitle("TicTacToe")
 
@@ -143,6 +145,7 @@ class Window(QMainWindow):
         self.GameMode.addItem('3x3')
         self.GameMode.addItem('4x4')
         self.GameMode.addItem('5x5')
+        self.GameMode.currentTextChanged.connect(self.conditional_render_player_help)
         # ------------------------------------------------
         # Toggle-Button für Spielmodus 1vs1 - 1vsKI
         # ------------------------------------------------
@@ -153,6 +156,15 @@ class Window(QMainWindow):
         self.KIButton.setFont(QFont('Arial', 18))
         self.KIButton.setText('1 vs 1')
         self.KIButton.setStyleSheet("background-color : lightgrey")
+        # ------------------------------------------------
+        # Checkbox to enable player advice
+        # ------------------------------------------------
+        self.helperCheckBox = QCheckBox(self)
+        self.helperCheckBox.setText("Player 1 helper")
+        self.helperCheckBox.setToolTip("If this checkbox is checked, Player 1 will get hints to play succesful.\n Only available in the 3x3 game mode")
+
+
+
         # -------------------------------------------------
         self.playername2 = QLineEdit(self)  # erstelle Texteingabe Spieler 2
         # Defaultwert 'Spieler 2' für Name
@@ -190,6 +202,7 @@ class Window(QMainWindow):
         self.labelGameMode.setGeometry(100, 130, 100, 35)
         self.GameMode.setGeometry(100, 170, 100, 35)
         self.KIButton.setGeometry(100, 210, 100, 35)
+        self.helperCheckBox.setGeometry(70, 260, 200,35)
 
         # ---------------------------------
         # Aufruf Methode bei Zeichenwechsel
@@ -279,7 +292,7 @@ class Window(QMainWindow):
             print(self.game)
             # erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
             self.gameWindow = Gamewindow.GameWindow(
-                self.game, self, self.KIenabled)
+                self.game, self, self.KIenabled, self.helperCheckBox.isChecked())
             # self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.gameWindow.show()
 
@@ -356,3 +369,12 @@ class Window(QMainWindow):
         self.game.id = self.DB.get_amount_off_documents()
         now = datetime.now()
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
+
+    def conditional_render_player_help(self, selectedMode):
+        print("CHECKBOX", selectedMode)
+        if selectedMode == '3x3':
+            self.helperCheckBox.show()
+        else:
+            self.helperCheckBox.setChecked(False)
+            self.helperCheckBox.hide()
+

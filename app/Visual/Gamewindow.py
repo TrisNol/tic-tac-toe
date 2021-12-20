@@ -20,7 +20,7 @@ class GameWindow(QWidget):
     will appear as a free-floating window as we want.
     """
 
-    def __init__(self, game, parent, KI):
+    def __init__(self, game, parent, KI, helper):
         super().__init__()
         self.DB = DB()
 
@@ -35,7 +35,7 @@ class GameWindow(QWidget):
         self.master = GameMaster(self.game.size)
         self.turn_number = 0
 
-        self.withHelp = True
+        self.withHelp = helper
         self.strategy = None
 
         layout = QVBoxLayout()
@@ -229,6 +229,6 @@ class GameWindow(QWidget):
     def indicatePrefferedTurns(self):
         for i in range(self.master.size):
             for j in range(self.master.size):
-                if self.strategy.suggestions[i][j] == 1:
+                if self.helper.suggestions[i][j] == 1:
                     self.push_list[i][j].setStyleSheet(
                         "background-color: red")

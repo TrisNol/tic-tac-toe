@@ -13,6 +13,7 @@ class Strategy():
         self.starter = starter
         self.opponent_sign = self.game.sign_player2
         self.own_sign = self.game.sign_player1
+        self.recommendation = []
         self.opponent = []
         self.own = []
 
@@ -60,29 +61,28 @@ class Strategy():
                     self.own.append([i, j])
 
     def analyze(self):
-        # Check Edge selection
-        res = self.selected_edge()
-        if res:
-            for i in range(0, len(self.board), 2):
-                for j in range(0, len(self.board), 2):
-                    if self.buttons[i][j].isEnabled():
-                        print("DUMM")
-                        self.highlightButton(i, j)
-        # Check Corner selection
-        res = self.selected_corner()
-        if res:
-            for i in range(0, len(self.board), 2):
-                for j in range(0, len(self.board), 2):
-                    if self.buttons[i][j].isEnabled():
-                        self.highlightButton(i, j)
+        # Select corner
+        for i in range(0, len(self.board), 2):
+            for j in range(0, len(self.board), 2):
+                if self.buttons[i][j].isEnabled():
+                    if [i, j] not in self.recommendation:
+                        self.recommendation.append([i, j])
+
+        # Select Center if available
+        if self.buttons[1][1].isEnabled():
+            self.recommendation.append([1, 1])
         
-        # Check Center selection
-        res = (1, 1) if self.board[1][1] == self.opponent_sign else None
-        if res:
-            for i in range(0, len(self.board), 2):
-                for j in range(0, len(self.board), 2):
-                    if self.buttons[i][j].isEnabled():
-                        self.highlightButton(i, j)
+        if len(self.recommendation) < 2:
+            self.recommendation = []
+            res = self.can_win(self.opponent_sign, self.own_sign, 0)
+            if res:
+                self.recommendation.append([res[0], res[1]])
+
+        # Highlight preferred buttons
+        for entry in self.recommendation:
+            self.highlightButton(entry[0], entry[1])
+
+        self.recommendation = []
 
     def enemy_check_column(self, column):
         for i in range(0, len(self.board)):
@@ -106,7 +106,7 @@ class Strategy():
                 return True
             temp += 1
 
-    def win_check_column(self, caller_sign, opponent_sign):
+    def win_check_column(self, caller_sign, opponent_sign, threshold=2):
         counter = 0
         value = None
         for i in range(0, len(self.board)):
@@ -117,11 +117,11 @@ class Strategy():
                     counter += 1
                 else:
                     value = (i, j)
-            if counter == 2:
+            if counter == threshold:
                 return value
             counter = 0
 
-    def win_check_row(self, caller_sign, opponent_sign):
+    def win_check_row(self, caller_sign, opponent_sign, threshold=2):
         counter = 0
         value = None
         for i in range(0, len(self.board)):
@@ -132,12 +132,12 @@ class Strategy():
                     counter += 1
                 else:
                     value = (j, i)
-            if counter == 2:
+            if counter == threshold:
                 return value
             counter = 0
         return False
 
-    def win_check_left_right_diagonal(self, caller_sign, opponent_sign):
+    def win_check_left_right_diagonal(self, caller_sign, opponent_sign, threshold=2):
         counter = 0
         value = None
         for i in range(0, 3):
@@ -147,14 +147,14 @@ class Strategy():
                 counter += 1
             else:
                 value = (i, i)
-        if counter == 2:
+        if counter == threshold:
             return value
 
-    def win_check_right_left_diagonal(self, caller_sign, opponent_sign):
+    def win_check_right_left_diagonal(self, caller_sign, opponent_sign, threshold=2):
         counter = 0
         temp = 0
         value = None
-        for i in reversed(range(2, -1, -1)):
+        for i in range(2, -1, -1):
             if self.board[i][temp] == opponent_sign:
                 break
             elif self.board[i][temp] == caller_sign:
@@ -163,23 +163,25 @@ class Strategy():
                 value = (i, temp)
             temp += 1
 
-        if counter == 2:
+        if counter == threshold:
             return value
 
-    def can_win(self, caller_sign, opponent_sign):
-        res = self.win_check_column(caller_sign, opponent_sign)
+    def can_win(self, caller_sign, opponent_sign, threshold=2):
+        res = self.win_check_column(caller_sign, opponent_sign, threshold)
         if res:
             return res
 
-        res = self.win_check_row(caller_sign, opponent_sign)
+        res = self.win_check_row(caller_sign, opponent_sign, threshold)
         if res:
             return res
 
-        res = self.win_check_left_right_diagonal(caller_sign, opponent_sign)
+        res = self.win_check_left_right_diagonal(
+            caller_sign, opponent_sign, threshold)
         if res:
             return res
 
-        res = self.win_check_right_left_diagonal(caller_sign, opponent_sign)
+        res = self.win_check_right_left_diagonal(
+            caller_sign, opponent_sign, threshold)
         if res:
             return res
 
