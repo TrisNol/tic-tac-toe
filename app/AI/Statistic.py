@@ -8,17 +8,46 @@ import pandas as pd
 
 
 class Statistic(AI):
+    """Implementation of the AI-Class based on the previously played games recorded on the DB.
+    """
 
     def __init__(self):
         self.analysis = Analysis()
 
-    def encode_field_to_string(self, field: list):
+    def encode_field_to_string(self, field: list) -> str:
+        """Helper-Method to convert the field to a string to utizilize the panda group-by function.
+
+        Parameters:
+            field (list): Nested list representing the Tic-Tac-Toe field
+
+        Returns:
+            str: Field represented in a string(columns: space-separated, rows: \\n separated)
+        
+        """
         return '\n'.join([' '.join([str(z) if z != "" else "-1" for z in y]) for y in field])
 
-    def decode_field_to_list(self, field: str):
+    def decode_field_to_list(self, field: str) -> list:
+        """Helper-Method to convert the string representing the field back to a nested list.
+        
+        Parameters:
+            field (str): String-representation of the Tic-Tac-Toe field
+
+        Returns:
+            list: Nested-list representation of the Tic-Tac-Toe field
+
+        """
         return [[z for z in y.split(" ")] for y in field.split('\n')]
 
     def transform_turns(self, df):
+        """Helper-Method to convert the field-states in the provided dataframe into the 0 and 1 representation.
+        
+        Parameters:
+            df (DataFrame): DataFrame containing the DB entries of the games played so far
+
+        Returns:
+            DataFrame: Converted frame
+
+        """
         for index, row in df.iterrows():
             symbol_one = row['sign_player1']
             symbol_two = row['sign_player2']

@@ -2,6 +2,8 @@ from AI.AI import AI
 from random import randint
 
 class Random(AI):
+    """Implementation of the AI-Class based a Random procedure.
+    """
 
     def recommendMove(self, field: list, player: int) -> tuple:
         # boardlist=[]

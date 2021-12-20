@@ -183,15 +183,12 @@ class GameWindow(QWidget):
         #---------------------------------------------------
         #Überprüfe ob KI angewählt ist, um Zug durchzuführen
         #---------------------------------------------------
-        if self.AI_enabled == True :
-            print('Debug KI enabled')
+        if self.AI_enabled == True and not self.master.is_won():
             if self.master.current_player == 1: 
-                print('Debug KI am Zug')
                 board = self.ai.translate_player_symbols(self.master.board, self.game.sign_player1, self.game.sign_player2)
                 row, column = self.ai.recommendMove(board, 1)
                 self.push_list[row][column].click()
             self.master.current_player=0
-            print('Spieler: ',self.master.current_player)
         #---------------------------------------------------
 
     def save_game(self):

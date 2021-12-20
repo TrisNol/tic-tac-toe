@@ -198,7 +198,7 @@ class Window(QMainWindow):
 
         self.labelGameMode.setGeometry(100, 130, 100, 35)
         self.GameMode.setGeometry(100, 170, 100, 35)
-        self.aiMode.setGeometry(100, 210, 100, 35)
+        self.aiMode.setGeometry(75, 210, 150, 35)
 
         # ---------------------------------
         # Aufruf Methode bei Zeichenwechsel
@@ -319,6 +319,15 @@ class Window(QMainWindow):
 
     def ai_changed(self, mode):
         self.ai = self.aiModes[mode]
+        if self.ai['enabled']:
+            self.playername2.setEnabled(False)
+            self.selectsign2.setEnabled(False)
+            self.selectsign2.addItem('©')  # Sonderzeichen für KI Gegner
+            self.selectsign2.setCurrentText('©')
+            self.game.sign_player2 = '©'
+        else:
+            self.playername2.setEnabled(True)
+            self.selectsign2.setEnabled(True)
         print(self.ai)
 
     def sign_changed1(self, s):  # setze Spielerzeichen 1 bei Änderung
