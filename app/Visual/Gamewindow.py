@@ -8,7 +8,7 @@ from random import randint
 from Logic import GameMaster
 from Model.GameTurn import GameTurn
 from datetime import datetime
-from Analysis.Strategy import Strategy
+from AI.Strategy import Strategy
 from utils.DB import DB
 
 import copy

@@ -1,7 +1,7 @@
-from PyQt5.QtCore import reset
+from AI import AI
 
 
-class Strategy():
+class Strategy(AI):
     """
     Will indicate preferred fields
     """
