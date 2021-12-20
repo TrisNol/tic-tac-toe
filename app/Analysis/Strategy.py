@@ -23,18 +23,20 @@ class Strategy():
             self.starter = False
             self.first()
         else:
+            # Check If I can win
+            res = self.can_win(self.own_sign, self.opponent_sign)
+            if res:
+                self.highlightButton(res[0], res[1])
+                return
+
+            # Check If opponent can win
             res = self.can_win(self.opponent_sign, self.own_sign)
             if res:
                 self.highlightButton(res[0], res[1])
+                return
 
-            else:
-
-                res = self.can_win(self.own_sign, self.opponent_sign)
-                if res:
-                    self.highlightButton(res[0], res[1])
-                else:
-                    self.collect()
-                    self.analyze()
+            self.collect()
+            self.analyze()
 
     def first(self):
         for i in range(0, len(self.buttons), 2):
@@ -58,21 +60,29 @@ class Strategy():
                     self.own.append([i, j])
 
     def analyze(self):
-        if self.board[1][1] == self.own_sign:
-            res = self.selected_edge()
-            if res:
-                for i in range(0, len(self.board), 2):
-                    for j in range(0, len(self.board), 2):
-                        if self.buttons[i][j].isEnabled():
-                            print("DUMM")
-                            self.highlightButton(i, j)
-
-            res = self.selected_corner()
-            if res:
-                for i in range(0, len(self.board), 2):
-                    for j in range(0, len(self.board), 2):
-                        if self.buttons[i][j].isEnabled():
-                            self.highlightButton(i, j)
+        # Check Edge selection
+        res = self.selected_edge()
+        if res:
+            for i in range(0, len(self.board), 2):
+                for j in range(0, len(self.board), 2):
+                    if self.buttons[i][j].isEnabled():
+                        print("DUMM")
+                        self.highlightButton(i, j)
+        # Check Corner selection
+        res = self.selected_corner()
+        if res:
+            for i in range(0, len(self.board), 2):
+                for j in range(0, len(self.board), 2):
+                    if self.buttons[i][j].isEnabled():
+                        self.highlightButton(i, j)
+        
+        # Check Center selection
+        res = (1, 1) if self.board[1][1] == self.opponent_sign else None
+        if res:
+            for i in range(0, len(self.board), 2):
+                for j in range(0, len(self.board), 2):
+                    if self.buttons[i][j].isEnabled():
+                        self.highlightButton(i, j)
 
     def enemy_check_column(self, column):
         for i in range(0, len(self.board)):
