@@ -64,7 +64,14 @@ class Analysis():
         Returns:
             Figure: Pie-chart
         """
+        # workaround to fix the chart issues, where old and new chart are stacked --> alternative: fig, axes instead plt
+        x = np.array([0])
+        y = np.array([1])
+        plt.subplot(1,2,1)
+        plt.plot(x,y)
+
         # https://stackoverflow.com/questions/44076203/getting-percentages-in-legend-from-pie-matplotlib-pie-chart
+        plt.subplot()
         plt.pie(data.values(), autopct='%1.1f%%', startangle=90)
         plt.axis('equal')
         labels = [f'{key}: {value}' for key, value in data.items()]
