@@ -1,4 +1,4 @@
-from AI import AI
+from AI.AI import AI
 
 
 class Strategy(AI):
