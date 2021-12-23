@@ -11,6 +11,7 @@ from Model import Game
 from Model.GameTurn import GameTurn
 from datetime import datetime
 from utils.DB import DB
+from AI.MiniMax import MiniMax
 
 import copy
 
@@ -22,6 +23,7 @@ class GameWindow(QWidget):
     def __init__(self,game,parent,KI):
         super().__init__()
         self.DB=DB()
+        self.MiniMax=MiniMax() #create MiniMax object for debugging AI-class
 
         #print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
         self.parent=parent
@@ -182,7 +184,9 @@ class GameWindow(QWidget):
             print('Debug KI enabled')
             if self.master.current_player == 1: 
                 print('Debug KI am Zug')
-                r,c= self.master.KI_set()
+                MiniMaxMove=self.MiniMax.recommendMove(self.master.board,self.master.current_player,self.game.sign_player1, self.game.sign_player2)
+                
+                r,c= MiniMaxMove
                 self.push_list[r][c].click()
             self.master.current_player=0
             print('Spieler: ',self.master.current_player)
