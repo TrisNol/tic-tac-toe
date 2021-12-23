@@ -10,7 +10,7 @@ class MiniMax(AI):  #create class 'MiniMax'
 		super().__init__()
 		print('constructor MiniMax')
 
-	def recommendMove(self, field: list, player: int, sign1, sign2) -> tuple: #receive Board-list and current player
+	def recommendMove(self, field: list, player: int, sign1=0, sign2=1) -> tuple: #receive Board-list and current player
 		self.size=len(field)
 		self.sign1=sign1
 		self.sign2=sign2
