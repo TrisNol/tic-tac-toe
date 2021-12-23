@@ -10,6 +10,7 @@ from Model.GameTurn import GameTurn
 from datetime import datetime
 from AI.Strategy import Strategy
 from utils.DB import DB
+from AI.MiniMax import MiniMax
 
 import copy
 
