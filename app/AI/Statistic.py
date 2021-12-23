@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")  #
 
 from AI.AI import AI
+from AI.Random import Random
 from utils.DB import DB
 from Analysis.Analysis import Analysis
 import pandas as pd
@@ -13,6 +14,8 @@ class Statistic(AI):
 
     def __init__(self):
         self.analysis = Analysis()
+        # Add Random as a fallback-mechanism if the Statistic should fail due to insufficient data
+        self.random = Random()
 
     def encode_field_to_string(self, field: list) -> str:
         """Helper-Method to convert the field to a string to utizilize the panda group-by function.
@@ -64,48 +67,49 @@ class Statistic(AI):
         frame = self.transform_turns(frame)
 
         moves = []  # {'current': [[]], 'next':[[]], 'won': True || False}
-        for index, row in frame.iterrows():
-            for i in range(len(row.turns)):
-                # current field state found
-                if row.turns[i]['state'] == field:
-                    # increment index to fetch the next move executed by the current player
-                    i = i+1
-                    # fetch if this game has been won by the current player
-                    last = row.turns[-1]
-                    moves.append(
-                        {'current': field, 'next': row.turns[i]['state'], 'won': last['player_id'] == player and last['latest_turn'] == True})
+        try:
+            for index, row in frame.iterrows():
+                for i in range(len(row.turns)):
+                    # current field state found
+                    if row.turns[i]['state'] == field:
+                        # increment index to fetch the next move executed by the current player
+                        i = i+1
+                        # fetch if this game has been won by the current player
+                        last = row.turns[-1]
+                        moves.append(
+                            {'current': field, 'next': row.turns[i]['state'], 'won': last['player_id'] == player and last['latest_turn'] == True})
 
-        df_recom = pd.DataFrame(moves)
+            df_recom = pd.DataFrame(moves)
 
-        # Pandas cannot group by (nested) lists so it is transformed into a string-represenatation before the groups are built
-        # 0 --> player 1, 1 --> player 2, -1 --> empty cell
-        df_recom['current'] = df_recom['current'].apply(
-            self.encode_field_to_string)
-        df_recom['next'] = df_recom['next'].apply(self.encode_field_to_string)
+            # Pandas cannot group by (nested) lists so it is transformed into a string-represenatation before the groups are built
+            # 0 --> player 1, 1 --> player 2, -1 --> empty cell
+            df_recom['current'] = df_recom['current'].apply(
+                self.encode_field_to_string)
+            df_recom['next'] = df_recom['next'].apply(self.encode_field_to_string)
 
-        # Output: Possible next moves by descending count of won games following this move
-        groups = df_recom.groupby("next").agg(
-            {'current': 'first', 'next': 'first', 'won': 'sum'}).sort_values('won', ascending=False)
-        # reset the string to the nested list
-        groups['current'] = groups['current'].apply(self.decode_field_to_list)
-        groups['next'] = groups['next'].apply(self.decode_field_to_list)
+            # Output: Possible next moves by descending count of won games following this move
+            groups = df_recom.groupby("next").agg(
+                {'current': 'first', 'next': 'first', 'won': 'sum'}).sort_values('won', ascending=False)
+            # reset the string to the nested list
+            groups['current'] = groups['current'].apply(self.decode_field_to_list)
+            groups['next'] = groups['next'].apply(self.decode_field_to_list)
 
-        currentState = groups.current[0]
-        nextState = groups.next[0]
+            currentState = groups.current[0]
+            nextState = groups.next[0]
 
-        # find difference in current and next state to calculate row and column
-        row = -1
-        column = -1
-        for i in range(len(currentState)):
-            for j in range(len(currentState[i])):
-                if currentState[i][j] != nextState[i][j]:
-                    row = i
-                    column = j
-        if row == -1 or column == -1:
-            raise Exception('No result')
-
-        print(f"Recommendation --> row: {row}, column: {column}")
-        return (row, column)
+            # find difference in current and next state to calculate row and column
+            row = -1
+            column = -1
+            for i in range(len(currentState)):
+                for j in range(len(currentState[i])):
+                    if currentState[i][j] != nextState[i][j]:
+                        row = i
+                        column = j
+            if row == -1 or column == -1:
+                raise Exception('No result')
+            return (row, column)
+        except:
+            return self.random.recommendMove(field, player)
 
 
 if __name__ == '__main__':
