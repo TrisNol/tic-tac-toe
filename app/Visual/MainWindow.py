@@ -9,6 +9,9 @@ from Logic import GameMaster
 from Visual import Gamewindow, Leaderboard
 from Analysis.AnalysisWindow import AnalysisWindow
 from Model.Game import Game
+from AI.Random import Random
+from AI.Statistic import Statistic
+from AI.MiniMax import MiniMax
 from utils.DB import DB
 from datetime import datetime
 
@@ -28,6 +31,7 @@ class Window(QMainWindow):
         self.start = False
         self.gameWindow = None  # Var zum Überprüfen, dass kein 'GameWindow' geöffnet ist
         self.KIenabled = False  # Computer KI ausgeschaltet
+        self.ai = {'enabled': False, 'ai': None}
        # self.initialize_game_class()
         self.leaderboard = None
         # Set background color
@@ -147,16 +151,7 @@ class Window(QMainWindow):
         self.GameMode.addItem('4x4')
         self.GameMode.addItem('5x5')
         self.GameMode.currentTextChanged.connect(self.conditional_render_player_help)
-        # ------------------------------------------------
-        # Toggle-Button für Spielmodus 1vs1 - 1vsKI
-        # ------------------------------------------------
-        self.KIButton = QPushButton("", self)
-        # setting checkable to true
-        self.KIButton.setCheckable(True)
-        # setting default color of button to light-grey
-        self.KIButton.setFont(QFont('Arial', 18))
-        self.KIButton.setText('1 vs 1')
-        self.KIButton.setStyleSheet("background-color : lightgrey")
+
         # ------------------------------------------------
         # Checkbox to enable player advice
         # ------------------------------------------------
@@ -166,6 +161,18 @@ class Window(QMainWindow):
 
 
 
+        self.aiModes = {'1 vs 1': {"enabled": False, "ai": None},
+                        '1 vs Random': {"enabled": True, "ai": Random()},
+                        '1 vs Statistic': {"enabled": True, "ai": Statistic()},
+                        '1 vs MiniMax': {"enabled": True, "ai": MiniMax()}
+                        }
+        self.aiMode = QComboBox(self)
+        self.aiMode.setFont(QFont('Arial', 16))
+        self.aiMode.setStyleSheet('background: lightgrey')
+        self.aiMode.addItem('1 vs 1')
+        self.aiMode.addItem('1 vs Random')
+        self.aiMode.addItem('1 vs Statistic')
+        self.aiMode.addItem('1 vs MiniMax')
         # -------------------------------------------------
         self.playername2 = QLineEdit(self)  # erstelle Texteingabe Spieler 2
         # Defaultwert 'Spieler 2' für Name
@@ -202,8 +209,8 @@ class Window(QMainWindow):
 
         self.labelGameMode.setGeometry(100, 130, 100, 35)
         self.GameMode.setGeometry(100, 170, 100, 35)
-        self.KIButton.setGeometry(100, 210, 100, 35)
         self.helperCheckBox.setGeometry(70, 260, 200,35)
+        self.aiMode.setGeometry(75, 210, 150, 35)
 
         # ---------------------------------
         # Aufruf Methode bei Zeichenwechsel
@@ -214,13 +221,13 @@ class Window(QMainWindow):
         self.playername1.textChanged.connect(self.textchangedPlayer1)
         self.playername2.textChanged.connect(self.textchangedPlayer2)
         self.GameMode.activated[str].connect(self.GameMode_changed)
-        self.KIButton.clicked.connect(self.changeKI)
+        self.aiMode.activated[str].connect(self.ai_changed)
         # --------------------------------
 # ----------------
 # Methoden für GUI
 # ----------------
 
-    def changeKI(self):
+    def changeAI(self):
         if self.KIButton.isChecked():
             self.KIButton.setStyleSheet('background-color: lightblue')
             self.KIButton.setText('1 vs KI')
@@ -281,7 +288,8 @@ class Window(QMainWindow):
         self.selectsign2.setEnabled(True)
         self.playername2.setEnabled(True)
         self.GameMode.setEnabled(True)
-        self.KIButton.setEnabled(True)
+        # self.KIButton.setEnabled(True)
+        self.aiMode.setEnabled(True)
         self.start_game.setEnabled(True)
         self.labelPlayer1.setStyleSheet('background: grey')
         self.labelPlayer2.setStyleSheet('background: grey')
@@ -295,13 +303,14 @@ class Window(QMainWindow):
             print(self.game)
             # erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
             self.gameWindow = Gamewindow.GameWindow(
-                self.game, self, self.KIenabled, self.helperCheckBox.isChecked())
+                self.game, self, self.ai['enabled'], self.ai['ai'], self.helperCheckBox.isChecked())
             # self.gameWindow = Gamewindow.GameWindow(self.game.size,self.game.sign_player1,self.game.sign_player2,self.game.name_player1,self.game.name_player2,self,self.KIenabled) #erstelle das Objekt GameWindow mit Übergabe der Spielbrettgröße und einer Instanz der Klasse Window
         self.gameWindow.show()
 
     # Erstellung des Child-Objekts 'GameWindow' in welchem gespielt wird
     def show_leaderboard(self):
         print('Debug Leaderboard Window')
+        self.leaderboard = Leaderboard.Leaderboard()
         # self.initialize_game_class()
         if self.leaderboard is None:
             # print(self.game)
@@ -341,6 +350,19 @@ class Window(QMainWindow):
             self.selectsign1.insertItem(index, zeichenTemp)
         self.selectsign1.removeItem(self.selectsign1.findText(s))
 
+    def ai_changed(self, mode):
+        self.ai = self.aiModes[mode]
+        if self.ai['enabled']:
+            self.playername2.setEnabled(False)
+            self.selectsign2.setEnabled(False)
+            self.selectsign2.addItem('©')  # Sonderzeichen für KI Gegner
+            self.selectsign2.setCurrentText('©')
+            self.game.sign_player2 = '©'
+        else:
+            self.playername2.setEnabled(True)
+            self.selectsign2.setEnabled(True)
+        print(self.ai)
+
     def start_game_action(self):  # Betätigung des grünen 'Start'-Buttons
         print('Debug Button Start')
         # ---------------------------------
@@ -367,7 +389,8 @@ class Window(QMainWindow):
         self.selectsign2.setEnabled(False)
         self.playername2.setEnabled(False)
         self.GameMode.setEnabled(False)
-        self.KIButton.setEnabled(False)
+        self.aiMode.setEnabled(False)
+        # self.KIButton.setEnabled(False)
         self.start_game.setEnabled(False)
         self.start = True
         self.label.setStyleSheet('background: white')

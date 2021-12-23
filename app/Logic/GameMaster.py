@@ -1,8 +1,8 @@
 from Logic.IController import IController
-from random import randint
 
 
 class GameMaster(IController):
+    """Implementation of the IController for dynamic field sizes as provided in the constructor"""
 
     def __init__(self, board_size: int = 3):
         self.build_board(board_size)
@@ -17,16 +17,16 @@ class GameMaster(IController):
         self.board = [["" for i in range(self.size)]
                       for j in range(self.size)]
 
-    def set_field(self, row, column, label):
+    def set_field(self, row: int, column: int, label: str) -> None:
         if row >= self.size and column >= self.size:
             raise IndexError('Row or column Index out of range')
         self.board[row][column] = label
         self.times += 1
 
-    def next_player(self):
+    def next_player(self) -> None:
         self.current_player = int(not(self.current_player))
 
-    def is_draw(self):
+    def is_draw(self) -> bool:
         return self.times == (self.size*self.size)
 
     def is_won(self) -> bool:
@@ -51,51 +51,3 @@ class GameMaster(IController):
 
         # if nothing is crossed
         return False
-
-    #--------------------------------------
-    #KI Methode für das Setzen eines Feldes
-    #--------------------------------------
-    def KI_set(self):
-        print('Debug KI_set')
-        boardlist=[]
-        #Generiere einen row/column Eintrag und überprüfe ob frei
-        for x in range(100):       #Angabe Iterationen zum Finden eines freien Feldes
-            row=randint(0,len(self.board)-1)
-            column=randint(0,len(self.board)-1)
-            fieldstatus=self.board[row][column]
-            if fieldstatus=='': #leeres Feld gefunden
-                print('Freies Feld bei: ', row, column )
-                print('benoetigte Iterationen: ', x)
-                break
-
-        #Erstelle eine eindimensionale Liste aus der Boardliste
-        for element in self.board:
-            if type(element) is list:
-                for item in element:
-                    boardlist.append(item)
-            else:
-                boardlist.append(element)
-        #-------------------------------------                
-        #print('boardlist: ', boardlist)
-        #print(row, column)
-        return row, column
-
-
-# if __name__ == "__main__":
-#     temp = GameMaster()
-#     temp.build_board(4)
-
-#     # temp.board= [['X','X','X'], [], []]
-#     temp.set_field(0, 0, 'X')
-#     print(temp.current_player)
-#     temp.set_field(1, 0, 'X')
-#     print(temp.current_player)
-#     temp.set_field(2, 0, 'X')
-#     print(temp.current_player)
-#     temp.set_field(3, 0, 'X')
-#     print(temp.current_player)
-#     print(temp.board)
-#     print(f"hat gewonnen? {temp.is_won()}")
-
-#     temp.times = 16
-#     print(temp.is_draw())

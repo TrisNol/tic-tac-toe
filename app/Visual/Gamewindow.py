@@ -9,6 +9,7 @@ from Logic import GameMaster
 from Model.GameTurn import GameTurn
 from datetime import datetime
 from AI.Strategy import Strategy
+from AI.AI import AI
 from utils.DB import DB
 from AI.MiniMax import MiniMax
 
@@ -21,14 +22,17 @@ class GameWindow(QWidget):
     will appear as a free-floating window as we want.
     """
 
-    def __init__(self, game, parent, KI, helper):
+    ai: AI = None
+    def __init__(self,game,parent,AI_enabled, ai, helper):
         super().__init__()
         self.DB = DB()
 
-        # print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
-        self.parent = parent
-        self.game = game
-        self.KIenabled = KI
+        #print('Debug Uebergabe:',x,game.sign_player1,game.sign_player2,game.name_player1,game.name_player2)
+        self.parent=parent
+        self.game=game        
+        self.AI_enabled=AI_enabled
+        self.ai = ai
+        print('passed down AI: '+ str(self.ai))
         print(self.game.name_player2)
         # --------------------------------------------
 
@@ -207,18 +211,16 @@ class GameWindow(QWidget):
         # setting text to the label
         self.label.setText(text)
 
-        # ---------------------------------------------------
-        # Überprüfe ob KI angewählt ist, um Zug durchzuführen
-        # ---------------------------------------------------
-        if self.KIenabled == True:
-            print('Debug KI enabled')
-            if self.master.current_player == 1:
-                print('Debug KI am Zug')
-                r, c = self.master.KI_set()
-                self.push_list[r][c].click()
-            self.master.current_player = 0
-            print('Spieler: ', self.master.current_player)
-        # ---------------------------------------------------
+        #---------------------------------------------------
+        #Überprüfe ob KI angewählt ist, um Zug durchzuführen
+        #---------------------------------------------------
+        if self.AI_enabled == True and not self.master.is_won():
+            if self.master.current_player == 1: 
+                board = self.ai.translate_player_symbols(self.master.board, self.game.sign_player1, self.game.sign_player2)
+                row, column = self.ai.recommendMove(board, 1)
+                self.push_list[row][column].click()
+            self.master.current_player=0
+        #---------------------------------------------------
 
     def save_game(self):
         print(self.game.id)
