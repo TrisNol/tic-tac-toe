@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from Model.GameTurn import GameTurn
+from model.gameturn import GameTurn
 
 @dataclass()
 class Game(object):

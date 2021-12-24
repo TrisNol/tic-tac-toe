@@ -1,4 +1,3 @@
-
 class Player:
     _name = ""
     _label = ""

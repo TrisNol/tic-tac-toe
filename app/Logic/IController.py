@@ -1,6 +1,5 @@
 from abc import ABC
 
-
 class IController(ABC):
     """Abstract class to provide the functionality to manage the Tic-Tac-Toe board and host the primary game-logic.
     """

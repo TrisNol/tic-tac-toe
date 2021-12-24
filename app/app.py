@@ -1,13 +1,9 @@
 from PyQt5.QtWidgets import QApplication
 import sys
-from Visual.MainWindow import Window
+from visual.mainwindow import Window
 
-
-# create pyqt5 app
 App = QApplication(sys.argv)
 
-# Erstelle die Instanz für das Hauptfenster
 windowMain = Window()
 
-# start the app
 sys.exit(App.exec())

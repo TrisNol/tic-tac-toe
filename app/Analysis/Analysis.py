@@ -1,6 +1,6 @@
 
 from matplotlib.figure import Figure
-from utils.DB import DB
+from utils.db import DB
 import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt

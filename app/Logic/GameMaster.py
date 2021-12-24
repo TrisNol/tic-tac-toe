@@ -1,5 +1,4 @@
-from Logic.IController import IController
-
+from logic.icontroller import IController
 
 class GameMaster(IController):
     """Implementation of the IController for dynamic field sizes as provided in the constructor"""

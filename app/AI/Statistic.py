@@ -1,10 +1,10 @@
 import sys
 sys.path.append("..")  #
 
-from AI.AI import AI
-from AI.Random import Random
-from utils.DB import DB
-from Analysis.Analysis import Analysis
+from ai.ai import AI
+from ai.random import Random
+from utils.db import DB
+from analysis.analysis import Analysis
 import pandas as pd
 
 
@@ -62,7 +62,7 @@ class Statistic(AI):
             # print(df[index])
         return df
 
-    def recommendMove(self, field: list, player: int) -> tuple:
+    def recommend_move(self, field: list, player: int) -> tuple:
         frame = self.analysis.get_frame()
         frame = self.transform_turns(frame)
 
@@ -94,26 +94,26 @@ class Statistic(AI):
             groups['current'] = groups['current'].apply(self.decode_field_to_list)
             groups['next'] = groups['next'].apply(self.decode_field_to_list)
 
-            currentState = groups.current[0]
-            nextState = groups.next[0]
+            current_state = groups.current[0]
+            next_state = groups.next[0]
 
             # find difference in current and next state to calculate row and column
             row = -1
             column = -1
-            for i in range(len(currentState)):
-                for j in range(len(currentState[i])):
-                    if currentState[i][j] != nextState[i][j]:
+            for i in range(len(current_state)):
+                for j in range(len(current_state[i])):
+                    if current_state[i][j] != next_state[i][j]:
                         row = i
                         column = j
             if row == -1 or column == -1:
                 raise Exception('No result')
             return (row, column)
         except:
-            return self.random.recommendMove(field, player)
+            return self.random.recommend_move(field, player)
 
 
 if __name__ == '__main__':
     temp = [[0, 1, '', '', ''], [0, 1, '', '', ''], [0, 1, '', '', ''], [0, '', '', '', ''], ['', '', '', '', '']]
     stat = Statistic()
-    (row, column) = stat.recommendMove(temp, 0)
+    (row, column) = stat.recommend_move(temp, 0)
     print(row, column)

@@ -1,6 +1,5 @@
 import pymongo
 
-
 class DB:
     def __init__(self) -> None:
         self.client = pymongo.MongoClient(

@@ -1,5 +1,4 @@
-from AI.AI import AI
-
+from ai.ai import AI
 
 class Strategy(AI):
     """
@@ -24,13 +23,13 @@ class Strategy(AI):
             # Check If I can win
             res = self.can_win(self.own_sign, self.opponent_sign)
             if res:
-                self.highlightButton(res[0], res[1])
+                self.highlight_button(res[0], res[1])
                 return
 
             # Check If opponent can win
             res = self.can_win(self.opponent_sign, self.own_sign)
             if res:
-                self.highlightButton(res[0], res[1])
+                self.highlight_button(res[0], res[1])
                 return
                 
             self.analyze()
@@ -38,10 +37,10 @@ class Strategy(AI):
     def first(self):
         for i in range(0, len(self.buttons), 2):
             for j in range(0, len(self.buttons), 2):
-                self.highlightButton(i, j)
-        self.highlightButton(1, 1)
+                self.highlight_button(i, j)
+        self.highlight_button(1, 1)
 
-    def highlightButton(self, i, j):
+    def highlight_button(self, i, j):
         self.buttons[i][j].setStyleSheet("border :5px solid ;"
                                          "border-top-color : red; "
                                          "border-left-color :pink;"
@@ -68,7 +67,7 @@ class Strategy(AI):
 
         # Highlight preferred buttons
         for entry in self.recommendation:
-            self.highlightButton(entry[0], entry[1])
+            self.highlight_button(entry[0], entry[1])
 
         self.recommendation = []
 
