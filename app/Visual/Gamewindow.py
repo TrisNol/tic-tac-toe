@@ -90,7 +90,7 @@ class GameWindow(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setFont(QFont('Times', 15))
 
-        end_game = QPushButton("Beenden", self)
+        end_game = QPushButton("Finish", self)
         end_game.setGeometry(int((self.master.size*100)/2-100), (self.master.size*80) +
                              self.master.size*20+80, 200, 50) 
         end_game.setStyleSheet('background-color: lightgrey')

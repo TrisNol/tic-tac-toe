@@ -54,7 +54,7 @@ class Window(QMainWindow):
         exit_game = QPushButton("Exit", self)
 
         # setting geometry
-        exit_game.setGeometry(50, 600, 200, 50)  # (X, Y, width, hight)
+        exit_game.setGeometry(50, 700, 200, 50)  # (X, Y, width, hight)
         exit_game.setStyleSheet('background-color: red')
 
         # adding action action to the reset push button
@@ -68,7 +68,7 @@ class Window(QMainWindow):
         # adding action action to the reset push button
         self.start_game.clicked.connect(self.start_game_action)
 
-        self.open_scoreboard = QPushButton("scoreboard", self)
+        self.open_scoreboard = QPushButton("Scoreboard", self)
         self.open_scoreboard.setGeometry(
             50, 650, 200, 50)  
         self.open_scoreboard.setStyleSheet('background-color: yellow')
@@ -77,8 +77,8 @@ class Window(QMainWindow):
         self.label_player1 = QLabel(self)
         self.show_analysis = QPushButton("Analysis", self)
         self.show_analysis.setGeometry(
-            50, 700, 200, 50)  
-        self.show_analysis.setStyleSheet('background-color: blue')
+            50, 600, 200, 50)  
+        self.show_analysis.setStyleSheet('background-color: orange')
 
         # adding action action to the reset push button
         self.show_analysis.clicked.connect(self.show_analysis_action)
@@ -331,7 +331,7 @@ class Window(QMainWindow):
         self.start = True
         self.label.setStyleSheet('background: white')
         self.label.setFont(QFont('Arial', 16))
-        self.label.setText('Spiel gestartet')
+        self.label.setText('Game started')
         self.show_game_window()
 
     def exit_game_action(self): 
