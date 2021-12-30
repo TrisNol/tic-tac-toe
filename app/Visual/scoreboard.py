@@ -21,6 +21,7 @@ class Scoreboard(QTableWidget):
         self.show()
 
     def get_highscore_list(self):
+        """Calculates and returns the Scores based on the games stored on the database"""
         self.db = DB()
         results = list(self.db.get_player_stats())
         highscore_list = {}
@@ -53,6 +54,7 @@ class Scoreboard(QTableWidget):
         return highscore_list
 
     def createTable(self, highscore_list):
+        """Creates the UI elements (Table) and adds the data from the database"""
         self.setRowCount(len(highscore_list))
         self.setColumnCount(4)
         names = list(highscore_list)

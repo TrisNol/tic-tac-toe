@@ -1,9 +1,7 @@
 from ai.ai import AI
 
 class Strategy(AI):
-    """
-    Will indicate preferred fields
-    """
+    """Will indicate preferred fields"""
 
     def __init__(self, buttons, board, game, starter=True) -> None:
         self.buttons = buttons
@@ -15,6 +13,17 @@ class Strategy(AI):
         self.recommendation = []
 
     def handler(self):
+        """Checks which player is able to win 
+
+        Parameters:
+            board (): Nested list of integers representing the Tic-Tac-Toe field
+            buttons ():
+            game (game): object of the current game
+            starter ():
+
+        Returns:
+            
+        """
         self.reset()
         if self.starter:
             self.starter = False
@@ -35,12 +44,14 @@ class Strategy(AI):
             self.analyze()
 
     def first(self):
+        """Helperfunction for getting the first button"""
         for i in range(0, len(self.buttons), 2):
             for j in range(0, len(self.buttons), 2):
                 self.highlight_button(i, j)
         self.highlight_button(1, 1)
 
     def highlight_button(self, i, j):
+        """Helperfunction to highlight a button"""
         self.buttons[i][j].setStyleSheet("border :5px solid ;"
                                          "border-top-color : red; "
                                          "border-left-color :pink;"
@@ -48,6 +59,7 @@ class Strategy(AI):
                                          "border-bottom-color : green")
 
     def analyze(self):
+        """Function to determine the best turn for the ki based"""
         # Select corner
         for i in range(0, len(self.board), 2):
             for j in range(0, len(self.board), 2):
@@ -72,21 +84,25 @@ class Strategy(AI):
         self.recommendation = []
 
     def enemy_check_column(self, column):
+        """Return True if opponent sign is in column"""
         for i in range(0, len(self.board)):
             if self.board[column][i] == self.opponent_sign:
                 return True
 
     def enemy_check_row(self, row):
+        """Return True if opponent sign is in row"""
         for i in range(0, len(self.board)):
             if self.board[i][row] == self.opponent_sign:
                 return True
 
     def enemy_check_left_right_diagonal(self):
+        """Return True if opponent sign is in diagonal"""
         for i in range(0, 3):
             if self.board[i][i] == self.opponent_sign:
                 return True
 
     def enemy_check_right_left_diagonal(self):
+        """Return True if opponent sign is in diagonal"""
         temp = 0
         for i in reversed(range(2, -1, -1)):
             if self.board[i][temp] == self.opponent_sign:
@@ -94,6 +110,16 @@ class Strategy(AI):
             temp += 1
 
     def win_check_column(self, caller_sign, opponent_sign, threshold=2):
+        """Helperfunction to check win possibility
+        
+        Parameters:
+            caller_sign (str): contains player sign 
+            opponent_sign ():  contains enemy sign
+            threshold ():
+
+        Returns:
+            value: 
+        """
         counter = 0
         value = None
         for i in range(0, len(self.board)):
@@ -109,6 +135,16 @@ class Strategy(AI):
             counter = 0
 
     def win_check_row(self, caller_sign, opponent_sign, threshold=2):
+        """Helperfunction to check win possibility
+        
+        Parameters:
+            caller_sign (str): contains player sign 
+            opponent_sign ():  contains enemy sign
+            threshold ():
+
+        Returns:
+            value: 
+        """
         counter = 0
         value = None
         for i in range(0, len(self.board)):
@@ -125,6 +161,16 @@ class Strategy(AI):
         return False
 
     def win_check_left_right_diagonal(self, caller_sign, opponent_sign, threshold=2):
+        """Helperfunction to check win possibility
+        
+        Parameters:
+            caller_sign (str): contains player sign 
+            opponent_sign ():  contains enemy sign
+            threshold ():
+
+        Returns:
+            value: 
+        """
         counter = 0
         value = None
         for i in range(0, 3):
@@ -138,6 +184,16 @@ class Strategy(AI):
             return value
 
     def win_check_right_left_diagonal(self, caller_sign, opponent_sign, threshold=2):
+        """Helperfunction to check win possibility
+        
+        Parameters:
+            caller_sign (str): contains player sign 
+            opponent_sign ():  contains enemy sign
+            threshold ():
+
+        Returns:
+            value: 
+        """
         counter = 0
         temp = 0
         value = None
@@ -154,6 +210,16 @@ class Strategy(AI):
             return value
 
     def can_win(self, caller_sign, opponent_sign, threshold=2):
+        """Uses helper functions to check if a win is still possible
+        
+        Parameters:
+            caller_sign (str): contains player sign 
+            opponent_sign ():  contains enemy sign
+            threshold ():
+
+        Returns:
+            res: 
+        """
         res = self.win_check_column(caller_sign, opponent_sign, threshold)
         if res:
             return res
@@ -173,6 +239,7 @@ class Strategy(AI):
             return res
 
     def reset(self):
+        """Resets the game"""
         for i in range(0, len(self.buttons), 1):
             for j in range(0, len(self.buttons), 1):
                 if self.buttons[i][j].isEnabled():

@@ -16,10 +16,7 @@ from ai.minimax import MiniMax
 import copy
 
 class GameWindow(QWidget):
-    """
-    This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
-    """
+    """This "window" is a QWidget. If it has no parent, it will appear as a free-floating window as we want"""
 
     ai: AI = None
     def __init__(self,game, parent, ai_enabled, ai, helper):
@@ -29,9 +26,10 @@ class GameWindow(QWidget):
         self.game = game        
         self.ai_enabled = ai_enabled
         self.ai = ai
+
         print('passed down AI: '+ str(self.ai))
         print(self.game.name_player2)
-        # --------------------------------------------
+
         self.master = GameMaster(self.game.size)
         self.turn_number = 0
 
@@ -44,12 +42,12 @@ class GameWindow(QWidget):
         self.setStyleSheet("background-color: grey;")
         # setting geometry
         self.setGeometry(700, 100, self.game.size*100,
-                         (self.game.size+1)*120)  # (X,Y,Breite,Höhe)
+                         (self.game.size+1)*120)  
 
-        # Methode für UI Komponenten von GameWindow
         self.ui_components()
 
     def ui_components(self):
+        """Creates the UI components for the game on the window object"""
         self.push_list = []
 
         for _ in range(self.master.size):
@@ -71,7 +69,7 @@ class GameWindow(QWidget):
                 self.push_list[i][j].setStyleSheet(
                     "background-color: lightgrey")
 
-                # adding action
+                
                 self.push_list[i][j].clicked.connect(
                     lambda state, i=i, j=j: self.action_called(i, j))
 
@@ -92,7 +90,6 @@ class GameWindow(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setFont(QFont('Times', 15))
 
-        # -------------------------------------------------------
         end_game = QPushButton("Beenden", self)
         end_game.setGeometry(int((self.master.size*100)/2-100), (self.master.size*80) +
                              self.master.size*20+80, 200, 50) 
@@ -101,9 +98,9 @@ class GameWindow(QWidget):
 
         if self.strategy:
             self.strategy.handler()
-        # ------------------------------------------------------
 
     def write_game_stats(self, row, column, won=False):
+        """Writes games stats to the corresponding variables"""
         player_id = self.master.current_player
         state = copy.deepcopy(self.master.board)
         game_turn = GameTurn(player_id, row, column,
@@ -112,10 +109,12 @@ class GameWindow(QWidget):
         self.turn_number += 1
 
     def end_game_action(self):
+        """Closes the game object"""
         self.parent.close_game()  
         self.close()  
 
     def action_called(self, row, column):
+        """Checks if somebody has one"""
         button = self.sender()
         button.setEnabled(False)
 
@@ -141,11 +140,10 @@ class GameWindow(QWidget):
             self.save_game()
             # if current chance is 0
             if self.master.current_player == 1:
-                # Spieler 2 hat gewonnen
-                text = "{} \n hat gewonnen".format(self.game.name_player2)
-            # Spieler 1 hat gewonnen
+                text = "{} \n has won".format(self.game.name_player2)
+           
             else:
-                text = "{} \n hat gewonnen".format(self.game.name_player1)
+                text = "{} \n has won".format(self.game.name_player1)
 
             # disabling all the buttons
             for buttons in self.push_list:
@@ -156,7 +154,7 @@ class GameWindow(QWidget):
         # and total times is 9
         elif self.master.is_draw():
             self.save_game()
-            text = "Unentschieden"
+            text = "draw"
 
         self.master.next_player()
         # setting text to the label
@@ -167,9 +165,9 @@ class GameWindow(QWidget):
                 row, column = self.ai.recommend_move(board, 1)
                 self.push_list[row][column].click()
             self.master.current_player=0
-        #---------------------------------------------------
 
     def save_game(self):
+        """Stores the data of the game in the database"""
         print(self.game.id)
         now = datetime.now()
         self.game.end_time = now.strftime("%d.%m.%Y %H:%M:%S")
@@ -177,6 +175,7 @@ class GameWindow(QWidget):
         self.DB.close()
 
     def indicate_preffered_turns(self):
+        """Highlights visualy the recommended turn"""
         for i in range(self.master.size):
             for j in range(self.master.size):
                 if self.helper.suggestions[i][j] == 1:

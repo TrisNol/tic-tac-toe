@@ -24,26 +24,20 @@ class Window(QMainWindow):
         self.game_window = None  
         self.ki_enabled = False 
         self.ai = {'enabled': False, 'ai': None}
-       # self.initialize_game_class()
         self.scoreboard = None
-        # Set background color
         self.setStyleSheet("background-color: grey;")
-        # Enable help
         self.helper = None
-        # setting title
+
         self.setWindowTitle("TicTacToe")
-
-        # setting geometry
         self.setGeometry(100, 100,
-                         300, 800)  # (X,Y,Breite,Höhe)
-
-        # calling method
+                         300, 800)  
+       
         self.ui_components()
-
         self.show()
 
-    # method for components
+    
     def ui_components(self):
+        """Initialize UI elements on the window"""
         self.label = QLabel(self)
         self.label.setGeometry(20, 450, 260, 60)
         self.label.setStyleSheet("QLabel"
@@ -58,62 +52,65 @@ class Window(QMainWindow):
         # setting font to the label
         self.label.setFont(QFont('Times', 15))
         exit_game = QPushButton("Exit", self)
+
         # setting geometry
-        exit_game.setGeometry(50, 600, 200, 50)  # (X, Y, Breite, Höhe)
+        exit_game.setGeometry(50, 600, 200, 50)  # (X, Y, width, hight)
         exit_game.setStyleSheet('background-color: red')
+
         # adding action action to the reset push button
         exit_game.clicked.connect(self.exit_game_action)
         self.start_game = QPushButton("Start", self)
+
         # setting geometry
-        self.start_game.setGeometry(50, 550, 200, 50)  # (X, Y, Breite, Höhe)
+        self.start_game.setGeometry(50, 550, 200, 50) 
         self.start_game.setStyleSheet('background-color: green')
+
         # adding action action to the reset push button
         self.start_game.clicked.connect(self.start_game_action)
 
         self.open_scoreboard = QPushButton("scoreboard", self)
         self.open_scoreboard.setGeometry(
-            50, 650, 200, 50)  # (X, Y, Breite, Höhe)
+            50, 650, 200, 50)  
         self.open_scoreboard.setStyleSheet('background-color: yellow')
         self.open_scoreboard.clicked.connect(self.show_scoreboard)
 
         self.label_player1 = QLabel(self)
         self.show_analysis = QPushButton("Analysis", self)
         self.show_analysis.setGeometry(
-            50, 700, 200, 50)  # (X, Y, Breite, Höhe)
+            50, 700, 200, 50)  
         self.show_analysis.setStyleSheet('background-color: blue')
+
         # adding action action to the reset push button
         self.show_analysis.clicked.connect(self.show_analysis_action)
 
         self.label_player1 = QLabel(self)
-        self.label_player1.setText('Spieler 1')
+        self.label_player1.setText('Player 1')
         self.label_player1.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.label_player1.setFont(QFont('Arial', 16))
 
         self.label_player2 = QLabel(self)
-        self.label_player2.setText('Spieler 2')
+        self.label_player2.setText('Player 2')
         self.label_player2.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.label_player2.setFont(QFont('Arial', 16))
 
-        self.playername1 = QLineEdit(self)  # erstelle Texteingabe Spieler 1
-        # Defaultwert 'Spieler 1' für Name
-        self.playername1.setText('Spieler 1')
+        self.playername1 = QLineEdit(self)  
+        self.playername1.setText('Player 1')
         self.playername1.setFont(QFont('Arial', 12))
         self.playername1.setStyleSheet('background: lightblue')
 
-        self.game.name_player1 = 'Spieler 1'
-        # erstelle DropDown Objekt Zeichen Spieler 1
+        self.game.name_player1 = 'Player 1'
         self.select_sign1 = QComboBox(self)
         self.select_sign1.setFont(QFont('Arial', 20))
         self.select_sign1.setStyleSheet('background: lightgrey')
         # ------------------------------------------------
-        # Dropdown für Modus 3x3 - 4x4 - 5x5
+        # Dropdown for mode 3x3 - 4x4 - 5x5
         # ------------------------------------------------
         self.label_gamemode = QLabel(self)
-        self.label_gamemode.setText('Modus')
+        self.label_gamemode.setText('mode')
         self.label_gamemode.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.label_gamemode.setFont(QFont('Arial', 16))
 
-        # erstelle DropDown Objekt Zeichen Spieler 1
+        # Create DropDown Object 
         self.gamemode = QComboBox(self)
         self.gamemode.setFont(QFont('Arial', 16))
         self.gamemode.setStyleSheet('background: lightgrey')
@@ -139,15 +136,13 @@ class Window(QMainWindow):
         self.ai_mode.addItem('1 vs Random')
         self.ai_mode.addItem('1 vs Statistic')
         self.ai_mode.addItem('1 vs MiniMax')
-        # -------------------------------------------------
-        self.playername2 = QLineEdit(self)  # erstelle Texteingabe Spieler 2
-        # Defaultwert 'Spieler 2' für Name
-        self.playername2.setText('Spieler 2')
+       
+        self.playername2 = QLineEdit(self)  
+        self.playername2.setText('Player 2')
         self.playername2.setFont(QFont('Arial', 12))
         self.playername2.setStyleSheet('background: yellow')
 
-        self.game.name_player2 = 'Spieler 2'
-        # erstelle DropDown Objekt Zeichen Spieler 2
+        self.game.name_player2 = 'Player 2'
         self.select_sign2 = QComboBox(self)
         self.select_sign2.setFont(QFont('Arial', 20))
         self.select_sign2.setStyleSheet('background: lightgrey')
@@ -157,12 +152,12 @@ class Window(QMainWindow):
         for x in range(len(self.sign_array)):
             self.select_sign1.addItem(self.sign_array[x])
             self.select_sign2.addItem(self.sign_array[x])
-        # -----------------------
-        # GUI Elemente platzieren
-        # -----------------------
+
+        # Placing GUI elements
         self.label_player1.setGeometry(30, 10, 100, 35)
         self.playername1.setGeometry(30, 45, 100, 35)
-        # Koordinate, Abmaße des Dropdowns
+
+        
         self.select_sign1.setGeometry(30, 80, 100, 35)
 
         self.label_player2.setGeometry(180, 10, 100, 35)
@@ -174,28 +169,25 @@ class Window(QMainWindow):
         self.helper_check_box.setGeometry(70, 260, 200,35)
         self.ai_mode.setGeometry(75, 210, 150, 35)
 
-        # ---------------------------------
         self.select_sign1.activated[str].connect(self.sign_changed1)
-        # self.select_sign1.activated[str].connect(self.game.sign_player1=)
         self.select_sign2.activated[str].connect(self.sign_changed2)
         self.playername1.textChanged.connect(self.textchangedPlayer1)
         self.playername2.textChanged.connect(self.textchangedPlayer2)
         self.gamemode.activated[str].connect(self.gamemode_changed)
         self.ai_mode.activated[str].connect(self.ai_changed)
-        # --------------------------------
 
     def change_ai(self):
+        """Changes the AI to the selected one"""
         if self.ki_button.isChecked():
             self.ki_button.setStyleSheet('background-color: lightblue')
             self.ki_button.setText('1 vs KI')
             self.playername2.setText('KI')
             self.playername2.setEnabled(False)
             self.select_sign2.setEnabled(False)
-            self.select_sign2.addItem('©')  # Sonderzeichen für KI Gegner
+            self.select_sign2.addItem('©')  
             self.select_sign2.setCurrentText('©')
             self.game.sign_player2 = '©'
             self.ki_enabled = True
-            print('Debug 1vsKI', self.ki_enabled)
         else:
             self.ki_button.setStyleSheet('background-color: lightgrey')
             self.ki_button.setText('1 vs 1')
@@ -206,9 +198,9 @@ class Window(QMainWindow):
             self.playername2.setEnabled(True)
             self.game.sign_player2 = ""
             self.ki_enabled = False
-            print('Debug 1vs1', self.ki_enabled)
 
-    def gamemode_changed(self, s):  # Auswahl der Spielfeldgröße 3x3, 4x4, 5x5
+    def gamemode_changed(self, s):
+        """Changes the boardsize"""  
         print('gamemode changed to: ', s)
         if s == '3x3':
             self.game.size = 3
@@ -220,6 +212,7 @@ class Window(QMainWindow):
             self.game.size = 0
 
     def close_game(self):
+        """resets the variables and fields"""
         self.game_window = None
         # resetting values
         sign1_tmp = self.game.sign_player1
@@ -227,53 +220,58 @@ class Window(QMainWindow):
         name1_tmp = self.game.name_player1
         name2_tmp = self.game.name_player2
         size_tmp = self.game.size
-        # ---------------------
+
         self.game = Game()
-        # ---------------------
+
         self.game.sign_player1 = sign1_tmp
         self.game.sign_player2 = sign2_tmp
         self.game.name_player1 = name1_tmp
         self.game.name_player2 = name2_tmp
         self.game.size = size_tmp
-        # -------------------
+
         self.select_sign1.setEnabled(True)
         self.select_sign2.setEnabled(True)
         self.playername1.setEnabled(True)
         self.select_sign2.setEnabled(True)
         self.playername2.setEnabled(True)
         self.gamemode.setEnabled(True)
-        # self.ki_button.setEnabled(True)
+
         self.ai_mode.setEnabled(True)
         self.start_game.setEnabled(True)
         self.label_player1.setStyleSheet('background: grey')
         self.label_player2.setStyleSheet('background: grey')
-        self.label.setText('Spiel beendet')
+        self.label.setText('Game finished')
 
     def show_game_window(self):
+        """Shows the actual game UI"""
         self.initialize_game_class()
         if self.game_window is None:
-            print(self.game)
             self.game_window = gamewindow.GameWindow(
                 self.game, self, self.ai['enabled'], self.ai['ai'], self.helper_check_box.isChecked())
         self.game_window.show()
 
     def show_scoreboard(self):
+        """Opens new window with the scoreboard"""
         self.scoreboard = scoreboard.Scoreboard()
         if self.scoreboard is None:
             self.scoreboard = scoreboard.Scoreboard()
         self.scoreboard.show()
 
     def show_analysis_action(self):
+        """Opens new window with the analysis pie-chart"""
         self.analysis_window = AnalysisWindow(self)
         self.analysis_window.show()
 
     def textchangedPlayer1(self, s):  
+        """Helperfunction: asiigns variable to the value from field"""
         self.game.name_player1 = s
 
     def textchangedPlayer2(self, s): 
+        """Helperfunction: asigns variable to the value from field"""
         self.game.name_player2 = s
 
     def sign_changed1(self, s):  
+        """Helperfunction: asigns variable to the value from field"""
         sign_tmp = self.game.sign_player1
         self.game.sign_player1 = s
         if sign_tmp:
@@ -282,6 +280,7 @@ class Window(QMainWindow):
         self.select_sign2.removeItem(self.select_sign2.findText(s))
 
     def sign_changed2(self, s): 
+        """Helperfunction: asigns variable to the value from field"""
         sign_tmp = self.game.sign_player2
         self.game.sign_player2 = s
 
@@ -291,6 +290,7 @@ class Window(QMainWindow):
         self.select_sign1.removeItem(self.select_sign1.findText(s))
 
     def ai_changed(self, mode):
+        """Helperfunction: asigns ai to the selected value"""
         self.ai = self.ai_modes[mode]
         if self.ai['enabled']:
             self.playername2.setEnabled(False)
@@ -304,22 +304,23 @@ class Window(QMainWindow):
         print(self.ai)
 
     def start_game_action(self):  
+        """Starts the game and disables all config fields"""
         if self.game.sign_player1 == '':
             self.label.setFont(QFont('Arial', 10))
             self.label.setStyleSheet('background: red')
-            self.label.setText('Fehler Spieler 1: kein Zeichen ausgewählt')
+            self.label.setText('Error Player 1: no sign selected')
             return
         elif self.game.sign_player2 == '':
             self.label.setStyleSheet('background: red')
             self.label.setFont(QFont('Arial', 10))
-            self.label.setText('Fehler Spieler 2: kein Zeichen ausgewählt')
+            self.label.setText('Error Player 2: no sign selected')
             return
         elif self.game.size == 0:
             self.label.setStyleSheet('background: red')
             self.label.setFont(QFont('Arial', 10))
-            self.label.setText('Fehler Modus: kein Spielmodus ausgewählt')
+            self.label.setText('Error mode: no mode selected')
             return
-        # ------------------------------------------------------------------------------------------
+
         self.select_sign1.setEnabled(False)
         self.playername1.setEnabled(False)
         self.select_sign2.setEnabled(False)
@@ -334,16 +335,18 @@ class Window(QMainWindow):
         self.show_game_window()
 
     def exit_game_action(self): 
+        """Closes the programm"""
         sys.exit() 
 
     def initialize_game_class(self):
+        """Connects to database"""
         self.DB = DB()
         self.game.id = self.DB.get_amount_off_documents()
         now = datetime.now()
         self.game.start_time = now.strftime("%d.%m.%Y %H:%M:%S")
 
     def conditional_render_player_help(self, selected_mode):
-        print("CHECKBOX", selected_mode)
+        """Shows a helper checkbox on 3x3"""
         if selected_mode == '3x3':
             self.helper_check_box.show()
         else:

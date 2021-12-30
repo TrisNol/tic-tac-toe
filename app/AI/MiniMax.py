@@ -3,7 +3,6 @@ from utils.db import DB
 from logic import GameMaster
 import time
 
-
 class MiniMax(AI): 
 	"""Implementation of AI"""
 
@@ -19,18 +18,11 @@ class MiniMax(AI):
 		best = find_best_move(self,field)
 		stop = time.perf_counter()
 		calctime = stop-start
-		print('Calc_Time : ', calctime)
-		print('Debug Minimax best move: ', best)
-		print(len(self.board_list))
-		print(self.board_list)
-		#initialize returning values
 		row = -1    
 		column = -1
 
 		return best
 
-# This is the evaluation function as discussed
-# in the previous article ( http://goo.gl/sJgv68 )
 def evaluate(self, board, size, sign1, sign2):
 	"""Helper-Method to convert a field of symbols (e.g.: X and O) to the int representation expected by recommend_move()
 
@@ -45,8 +37,6 @@ def evaluate(self, board, size, sign1, sign2):
         """
 	self.size = size
 	self.board = board
-	#sign2 is maximizer --> get positive values
-	#sign1 is minimizer --> get negative values
 
 	for i in range(self.size):
 		if all(x == self.board[i][0] for x in [self.board[i][j] for j in range(self.size)]) and self.board[i][0] != "":
@@ -80,7 +70,7 @@ def evaluate(self, board, size, sign1, sign2):
 	return 0
 
 def is_moves_left(self, board):
-
+	"""Returns True if there are move lefts, otherwise returns False."""
 	for i in range(self.size):
 		for j in range(self.size):
 			if (board[i][j] == ''):
@@ -88,7 +78,18 @@ def is_moves_left(self, board):
 	return False
 
 def minimax(self, board, depth, is_max, alpha = float('-inf'), beta = float('inf')):
+	"""Returns the result of the minimax algorithm.
 
+        Parameters:
+            board (): Nested list of integers representing the Tic-Tac-Toe field
+            depth (str): 
+            is_max (str):
+			alpha (str): 
+			beta	():
+
+        Returns:
+            best (int): 
+        """
 	interrupt = 10
 	cnt = 0
 	score = evaluate(self, board, self.size, self.sign1, self.sign2)
@@ -161,12 +162,17 @@ def minimax(self, board, depth, is_max, alpha = float('-inf'), beta = float('inf
 						#print('Debug break recursion mini')
 						return best
 
-
 		return best
 
+def find_best_move(self, board):
+	"""Function to determine the best turn for the ki based on the minimax algorithm 
 
-# This will return the best possible move for the player
-def find_best_move(self, board) :
+        Parameters:
+            board (): Nested list of integers representing the Tic-Tac-Toe field
+
+        Returns:
+            best_move (tupel): coordinates on the board
+        """
 	best_val = -1000
 	best_move = (-1, -1)
 	self.player = self.sign2
@@ -197,8 +203,6 @@ def find_best_move(self, board) :
 		self.depth = 8		
 	elif free <= 4:
 		self.depth = 20
-	
-
 
 	for i in range(self.size):	
 		for j in range(self.size):

@@ -9,8 +9,7 @@ import pandas as pd
 
 
 class Statistic(AI):
-    """Implementation of the AI-Class based on the previously played games recorded on the DB.
-    """
+    """Implementation of the AI-Class based on the previously played games recorded on the DB."""
 
     def __init__(self):
         self.analysis = Analysis()
@@ -49,7 +48,6 @@ class Statistic(AI):
 
         Returns:
             DataFrame: Converted frame
-
         """
         for index, row in df.iterrows():
             symbol_one = row['sign_player1']
@@ -59,14 +57,14 @@ class Statistic(AI):
                 row.turns[i]['state'] = self.translate_player_symbols(
                     row.turns[i]['state'], symbol_one, symbol_two)
             df[index] = row
-            # print(df[index])
         return df
 
     def recommend_move(self, field: list, player: int) -> tuple:
+        # See main description in the parent calss ai
         frame = self.analysis.get_frame()
         frame = self.transform_turns(frame)
 
-        moves = []  # {'current': [[]], 'next':[[]], 'won': True || False}
+        moves = []  
         try:
             for index, row in frame.iterrows():
                 for i in range(len(row.turns)):

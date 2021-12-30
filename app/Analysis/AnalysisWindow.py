@@ -4,7 +4,7 @@ from analysis.analysis import Analysis
 from analysis.mpl_canvas import MplCanvas
 
 class AnalysisWindow(QWidget):
-    """Window used to show the results provided by the Analysis class."""
+    """Window used to show the results provided by the Analysis class"""
 
     def __init__(self, parent):
         super().__init__()
@@ -13,7 +13,7 @@ class AnalysisWindow(QWidget):
         self.build_layout()
 
     def build_layout(self):
-        """Contains the assignments to build the UI."""
+        """Contains the assignments to build the UI"""
         self.setFixedSize(640, 480)
         self.setWindowTitle("Analysis")
         layout = QVBoxLayout()

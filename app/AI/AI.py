@@ -1,7 +1,6 @@
 from abc import ABC
 import copy
 
-
 class AI(ABC):
     """The abstract class AI mimics the behaviour of an interface in OOP. 
     This class is employed to unify the structure of the different AI implementations for Tic-Tac-Toe 
