@@ -109,9 +109,3 @@ class Statistic(AI):
         except:
             return self.random.recommend_move(field, player)
 
-
-if __name__ == '__main__':
-    temp = [[0, 1, '', '', ''], [0, 1, '', '', ''], [0, 1, '', '', ''], [0, '', '', '', ''], ['', '', '', '', '']]
-    stat = Statistic()
-    (row, column) = stat.recommend_move(temp, 0)
-    print(row, column)

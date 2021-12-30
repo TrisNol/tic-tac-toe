@@ -23,7 +23,7 @@ class Scoreboard(QTableWidget):
     def get_highscore_list(self):
         """Calculates and returns the Scores based on the games stored on the database"""
         self.db = DB()
-        results = list(self.db.get_player_stats())
+        results = self.db.get_entries()
         highscore_list = {}
         for game in results:
             player1 = False
