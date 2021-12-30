@@ -1,11 +1,11 @@
 from typing import List
 from dataclasses import dataclass
 
-from Model.GameTurn import GameTurn
+from model.gameturn import GameTurn
 
 @dataclass()
 class Game(object):
-    """ Class to store data related to a game. """
+    """ Class to store data related to a game"""
     id: int
     name_player1: str 
     name_player2: str 

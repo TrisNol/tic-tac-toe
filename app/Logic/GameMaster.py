@@ -1,5 +1,4 @@
-from Logic.IController import IController
-
+from logic.icontroller import IController
 
 class GameMaster(IController):
     """Implementation of the IController for dynamic field sizes as provided in the constructor"""
@@ -11,6 +10,7 @@ class GameMaster(IController):
         self.labels = []
 
     def build_board(self, n: int) -> list:
+        """Initializes board based on given size"""
         if n < 3:
             raise TypeError('Board cannot have less than 3 fields per row')
         self.size = n
@@ -18,20 +18,24 @@ class GameMaster(IController):
                       for j in range(self.size)]
 
     def set_field(self, row: int, column: int, label: str) -> None:
+        """Sets the field"""
         if row >= self.size and column >= self.size:
             raise IndexError('Row or column Index out of range')
         self.board[row][column] = label
         self.times += 1
 
     def next_player(self) -> None:
+        """sets current_player to next_player"""
         self.current_player = int(not(self.current_player))
 
     def is_draw(self) -> bool:
+        """Check if the game is a draw, if there are no more possible moves"""
         return self.times == (self.size*self.size)
 
     def is_won(self) -> bool:
+        """Checks if somebody has won"""
+        
         # checking if any row crossed
-
         for i in range(self.size):
             if all(x == self.board[i][0] for x in [self.board[i][j] for j in range(self.size)]) and self.board[i][0] != "":
                 return True

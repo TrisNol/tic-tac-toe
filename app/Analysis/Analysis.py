@@ -1,6 +1,6 @@
 
 from matplotlib.figure import Figure
-from utils.DB import DB
+from utils.db import DB
 import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
@@ -14,15 +14,14 @@ sys.path.append("..")
 
 
 class Analysis():
-    """Class containing methods to provide analytics of past Tic-Tac-Toe games that have been recorded in the DB.
-    """
+    """Class containing methods to provide analytics of past Tic-Tac-Toe games that have been recorded in the DB"""
 
     def __init__(self):
         self.db = DB()
         self.frame = pd.DataFrame(self.db.get_entries())
 
     def get_frame(self) -> DataFrame:
-        """Reads the entries in the DB and returns them as a pandas DataFrame.
+        """Reads the entries in the DB and returns them as a pandas DataFrame
 
         Returns:
             DataFrame: Frame containing the entries in the DB
@@ -30,7 +29,7 @@ class Analysis():
         return pd.DataFrame(self.db.get_entries())
 
     def get_player_win_relation(self, frame: DataFrame) -> dict:
-        """Calculates the win-/loss-relation of player 1 and player 2.
+        """Calculates the win-/loss-relation of player 1 and player 2
 
         Parameters:
             frame (DataFrame): DataFrame containing the DB entries
@@ -56,7 +55,7 @@ class Analysis():
         }
 
     def draw_win_pie(self, data: dict) -> Figure:
-        """Constructs a pie-chart of the provided data and returns it.
+        """Constructs a pie-chart of the provided data and returns it
 
         Parameters:
             data (dict): Dictionary containing the data to be drawn as a pie-chart
@@ -98,7 +97,7 @@ class Analysis():
         return game_len_avg
 
     def avg_turns(self, df: DataFrame) -> float:
-        """Calculates the average number of turns.
+        """Calculates the average number of turns
 
         Parameters:
             df (DataFrame): DataFrame containing the DB entries

@@ -1,18 +1,28 @@
-[![GitHub license](https://img.shields.io/github/license/TrisNol/sample-python-repo.svg)](https://github.com/TrisNol/sample-python-repo/blob/master/LICENSE)
-[![Github all releases](https://img.shields.io/github/downloads/TrisNol/sample-python-repo/total.svg)](https://github.com/users/TrisNol/packages/container/package/sample-python-repo)
-[![GitHub forks](https://img.shields.io/github/forks/TrisNol/sample-python-repo.svg?style=social&label=Fork&maxAge=2592000)](https://github.com/TrisNol/sample-python-repo)
-# Sample Python Repo
-This repo contains a skeleton for Python projects containing some basic DevOps´ components like CI/CD pipelines.
+# Arbeitsaufteilung
 
-## Linting
-The code of this repo will be linted with [PyLint](https://pylint.org/) automatically on each push and pull-request to ensure that the files are correctly formatted in order to improve readability.
+Aufgabe  | Personen | 
+-------- | -------- | 
+Repository aufsetzen   | Tristan Norbert Nolde   | 
+Code aufteilen   | Tristan Norbert Nolde   | 
+Statistik KI   | Tristan Norbert Nolde   |
+Analyse implementieren   | Tristan Norbert Nolde   |
+KI Parent klasse   | Tristan Norbert Nolde  |
+Interface erstellen und Dependency Injection integrieren   | Tristan Norbert Nolde  |
+Heuristik   | Lukas Pelster   | 
+Integration der Heuristik in die UI als Spielzugempfehlung   | Lukas Pelster   | 
+Datenbank integration   | Lukas Pelster   | 
+MiniMax KI   | Sebastian Zeleny  |
+Random KI   | Sebastian Zeleny   | 
+Mainwindow erstellen   | Sebastian Zeleny   | 
+Scoreboard   | Tim Marcel Ronneburg   | 
+Refactoring: Namingconventions, Kommentare   | Tim Marcel Ronneburg    | 
+Recherche zu KI   | Tristan Norbert Nolde, Lukas Pelster,  Sebastian Zeleny, Tim Marcel Ronneburg  | 
 
-## Tests
-You can add your tests in the test/ directory. By providing the prefix test_ the files will be recognized and executed by PyTest.
+# Codequality
+We followed the official instructions from Python on how to rigth code code:
+[![Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)](https://www.python.org/dev/peps/pep-0008/)
 
-## Documentation
-The documentation is created with the help of [Sphinx](https://www.sphinx-doc.org/en/master/), which generates a html-based docu that is exposed via GitHub pages.
-
-In order to adapt the config, change the specifics in ```./docs/conf.py```.
-To manually build the documentation execute the following command - and install sphinx if you haven´t already - ```sphinx-build ./docs ./docs/_build```.
-However, the documentation will be built automatically on each push and added to the repo by a GitHub Action - so you don´t have to generate it yourself each time.
+## Naming conventions
+Files and directorys:       all-lowercase except necessary underscores (__init__) and if a underscore improves the readability (mpl_canvas)
+Classnames:                 Capnames
+variables and functions:    lowercase with underscores

@@ -1,35 +1,20 @@
-from AI.AI import AI
+from ai.ai import AI
 from random import randint
 
 class Random(AI):
-    """Implementation of the AI-Class based a Random procedure.
-    """
+    """Implementation of the AI-Class based a Random procedure."""
 
-    def recommendMove(self, field: list, player: int) -> tuple:
-        # boardlist=[]
-        # Generate random row and column indexes and check if the cell is free
+    def recommend_move(self, field: list, player: int) -> tuple:        
+        # Generate random row and column indexes and check if the cell is free, Main discription see in parent class ai.
         row = -1
         column = -1
-        # TODO optimize loop?
         for x in range(100): 
-            row=randint(0,len(field)-1)
-            column=randint(0,len(field)-1)
+            row = randint(0,len(field)-1)
+            column = randint(0,len(field)-1)
             # empty cell found
-            if field[row][column]=='':
-                print('Freies Feld bei: ', row, column )
-                print('benoetigte Iterationen: ', x)
+            if field[row][column] =='':
+                print('Free field at: ', row, column )
+                print('taken iterations: ', x)
                 break
-
-        # TODO check what this is for
-        # #Erstelle eine eindimensionale Liste aus der Boardliste
-        # for element in field:
-        #     if type(element) is list:
-        #         for item in element:
-        #             boardlist.append(item)
-        #     else:
-        #         boardlist.append(element)
-        #-------------------------------------                
-        #print('boardlist: ', boardlist)
-        #print(row, column)
 
         return (row, column)

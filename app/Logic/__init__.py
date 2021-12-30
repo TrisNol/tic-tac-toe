@@ -1,2 +1,2 @@
-from .IController import IController
-from .GameMaster import GameMaster
+from .icontroller import IController
+from .gamemaster import GameMaster
