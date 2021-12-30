@@ -2,3 +2,4 @@ PyQt5
 pymongo
 pandas
 matplotlib
+numpy

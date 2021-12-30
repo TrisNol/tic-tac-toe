@@ -1,3 +1,19 @@
+# Installationsguide
+## Verpflichtende Tools:
+- Docker
+- Python 3
+
+## Optionale Tools:
+- MongoDB Compass (Connection string: mongodb://root:password@localhost:27017/)
+
+## Installation:
+- Optional: virtuelle Python Umgebung
+- Wechseln ins tic-tac-toe Verzeichnis
+- pip install -r requirements.txt
+- docker-compose up -d 
+- Anmerkung: Nach einmaligen Erstellen des Dockercontainer muss bei einem Neustart der Container manuell über Docker Desktop gestartet werden
+- python ./app/app.py
+
 # Arbeitsaufteilung
 
 Aufgabe  | Personen | 
@@ -17,6 +33,8 @@ Mainwindow erstellen   | Sebastian Zeleny   |
 Scoreboard   | Tim Marcel Ronneburg   | 
 Refactoring: Namingconventions, Kommentare   | Tim Marcel Ronneburg    | 
 Recherche zu KI   | Tristan Norbert Nolde, Lukas Pelster,  Sebastian Zeleny, Tim Marcel Ronneburg  | 
+
+----------------------------------------------------------------------------------------------------
 
 # Codequality
 We followed the official instructions from Python on how to rigth code code:
