@@ -1,3 +1,9 @@
+from PyQt5.QtWidgets import QApplication
+import sys
+from visual.mainwindow import Window
 
-if __name__ == '__main__':
-    print('Hello there')
+App = QApplication(sys.argv)
+
+windowMain = Window()
+
+sys.exit(App.exec())
